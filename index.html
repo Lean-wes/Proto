@@ -3,37 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensual Gallery +18</title>
+    <title>Bienvenido - Inicio de Sesión</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
-    <!-- Cloudinary Widget -->
-    <script src="https://upload-widget.cloudinary.com/latest/global/all.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #0d0208;
-            min-height: 100vh;
-            color: #fff;
-            padding: 20px;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(120, 20, 60, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(80, 10, 100, 0.1) 0%, transparent 50%);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        /* Animated Gradient Background */
+        .gradient-bg {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
         }
 
-        /* Login Overlay */
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Shapes */
+        .shape {
+            position: absolute;
+            filter: blur(50px);
+            z-index: -1;
+            animation: float 20s infinite;
+            opacity: 0.6;
+        }
+        .shape-1 {
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: purple;
+            animation-delay: 0s;
+        }
+        .shape-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: blue;
+            animation-delay: -5s;
+        }
+        .shape-3 {
+            top: 40%;
+            left: 40%;
+            width: 300px;
+            height: 300px;
+            background: pink;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        /* Button Hover Effect */
+        .google-btn {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .google-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            background: white;
+        }
+        .google-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Welcome Text Animation */
+        .welcome-text {
+            background: linear-gradient(to right, #fff, #e0e7ff, #fff);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 3s linear infinite;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* User Profile Image */
+        .profile-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.5);
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex items-center justify-center relative">
+
+    <!-- Background Elements -->
+    <div class="gradient-bg"></div>
+    <div class="shape shape-1 rounded-full"></div>
+    <div class="shape shape-2 rounded-full"></div>
+    <div class="shape shape-3 rounded-full"></div>
+
+    <!-- Main Container -->
+    <div class="glass-card rounded-3xl p-8 md:p-12 w-full max-w-md mx-4 text-center relative overflow-hidden">
+        
+        <!-- Decorative corner accents -->
+        <div class="absolute top-0 left-0 w-20 h-20 bg-white opacity-10 rounded-br-full"></div>
+        <div class="absolute bottom-0 right-0 w-20 h-20 bg-white opacity-10 rounded-tl-full"></div>
+
+        <!-- Content Container -->
+        <div id="content-area">
+            
+            <!-- Initial State: Login -->
+            <div id="login-state" class="transition-all duration-500">
+                <div class="mb-8">
+                    <div class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-6 flex items-center justify-center backdrop-blur-sm">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-bold text-white mb-2 welcome-text">¡Bienvenido!</h1>
+                    <p class="text-white/80 text-lg font-light">Inicia sesión para continuar</p>
+                </div>
+
+                <button id="google-login-btn" class="google-btn w-full py-4 px-6 rounded-xl flex items-center justify-center gap-3 text-gray-700 font-semibold text-lg group">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span>Continuar con Google</span>
+                    <div class="spinner ml-2" id="login-spinner"></div>
+                </button>
+
+                <p class="mt-6 text-white/60 text-sm">
+                    Al iniciar sesión, aceptas nuestros términos y condiciones
+                </p>
+            </div>
+
+            <!-- Logged In State: Welcome User -->
+            <div id="user-state" class="hidden transition-all duration-500 transform scale-95 opacity-0">
+                <div class="mb-6 relative inline-block">
+                    <img id="user-photo" src="" alt="Profile" class="profile-img mx-auto shadow-2xl">
+                    <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-400 border-2 border-white rounded-full"></div>
+                </div>
+                
+                <h2 class="text-3xl font-bold text-white mb-2">¡Hola, <span id="user-name" class="text-yellow-300"></span>!</h2>
+                <p id="user-email" class="text-white/70 mb-8 text-sm"></p>
+                
+                <div class="space-y-3">
+                    <div class="bg-white/10 rounded-lg p-4 text-left backdrop-blur-sm border border-white/10">
+                        <p class="text-white/60 text-xs uppercase tracking-wider mb-1">Estado</p>
+                        <p class="text-white font-semibold flex items-center gap-2">
+                            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                            Sesión activa
+                        </p>
+                    </div>
+                    
+                    <button id="logout-btn" class="w-full mt-6 py-3 px-6 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold transition-all duration-300 border border-white/20 flex items-center justify-center gap-2 group">
+                        <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                        </svg>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Error Message Toast -->
+        <div id="error-toast" class="absolute bottom-4 left-4 right-4 bg-red-500/90 text-white px-4 py-3 rounded-lg transform translate-y-20 opacity-0 transition-all duration-300 backdrop-blur-sm text-sm font-medium">
+            Error al iniciar sesión
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCd-lrexln3n2J9N2VhJDypVirFDgAM0ik",
+            authDomain: "studio-9954918589-b3de7.firebaseapp.com",
+            projectId: "studio-9954918589-b3de7",
+            storageBucket: "studio-9954918589-b3de7.appspot.com",
+            messagingSenderId: "137762705606",
+            appId: "1:137762705606:web:3841d220be8ba864c247c7"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        // DOM Elements
+        const loginBtn = document.getElementById('google-login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const loginState = document.getElementById('login-state');
+        const userState = document.getElementById('user-state');
+        const userName = document.getElementById('user-name');
+        const userEmail = document.getElementById('user-email');
+        const userPhoto = document.getElementById('user-photo');
+        const loginSpinner = document.getElementById('login-spinner');
+        const errorToast = document.getElementById('error-toast');
+
+        // Show Error
+        function showError(message) {
+            errorToast.textContent = message;
+            errorToast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                errorToast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Toggle Loading State
+        function setLoading(isLoading) {
+            if (isLoading) {
+                loginBtn.disabled = true;
+                loginBtn.querySelector('span').textContent = 'Conectando...';
+                loginSpinner.style.display = 'block';
+                loginBtn.style.opacity = '0.7';
+            } else {
+                loginBtn.disabled = false;
+                loginBtn.querySelector('span').textContent = 'Continuar con Google';
+                loginSpinner.style.display = 'none';
+                loginBtn.style.opacity = '1';
+            }
+        }
+
+        // Google Sign In
+        loginBtn.addEventListener('click', async () => {
+            setLoading(true);
+            try {
+                const result = await auth.signInWithPopup(provider);
+                console.log('Login successful:', result.user);
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Error al iniciar sesión: ' + error.message);
+                setLoading(false);
+            }
+        });
+
+        // Sign Out
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut();
+        });
+
+        // Auth State Observer
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                userName.textContent = user.displayName || 'Usuario';
+                userEmail.textContent = user.email;
+                userPhoto.src = user.photoURL || 'https://via.placeholder.com/80';
+                
+                // Transition animation
+                loginState.style.opacity = '0';
+                loginState.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    loginState.classList.add('hidden');
+                    userState.classList.remove('hidden');
+                    
+                    // Trigger reflow
+                    void userState.offsetWidth;
+                    
+                    userState.classList.remove('scale-95', 'opacity-0');
+                    userState.classList.add('scale-100', 'opacity-100');
+                }, 300);
+                
+            } else {
+                // User is signed out
+                userState.classList.add('scale-95', 'opacity-0');
+                userState.classList.remove('scale-100', 'opacity-100');
+                
+                setTimeout(() => {
+                    userState.classList.add('hidden');
+                    loginState.classList.remove('hidden');
+                    
+                    // Trigger reflow
+                    void loginState.offsetWidth;
+                    
+                    loginState.style.opacity = '1';
+                    loginState.style.transform = 'scale(1)';
+                }, 300);
+                
+                setLoading(false);
+            }
+        });
+
+        // Add some interactive mouse movement effect to the card
+        const card = document.querySelector('.glass-card');
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        });
+    </script>
+</body>
+</html>
         .login-overlay {
             position: fixed;
             inset: 0;
