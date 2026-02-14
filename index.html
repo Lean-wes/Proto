@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sensual Gallery +18</title>
-    <!-- Firebase SDK (compat mode para facilitar el uso) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
@@ -31,6 +31,18 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
+        }
+
+        /* Iconos SVG */
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .icon-large {
+            width: 48px;
+            height: 48px;
         }
 
         /* Login Overlay */
@@ -65,6 +77,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
         }
 
         .login-box .subtitle {
@@ -200,6 +216,9 @@
         .user-details h4 {
             font-size: 16px;
             margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .user-details span {
@@ -212,11 +231,10 @@
             color: #000;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-left: 10px;
         }
 
         .btn-logout {
@@ -228,49 +246,79 @@
             font-size: 13px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-logout:hover {
             background: rgba(220, 20, 60, 0.2);
         }
 
-        .upload-section {
+        .admin-panel {
             background: linear-gradient(145deg, rgba(196, 30, 58, 0.1), rgba(139, 0, 70, 0.1));
             border: 2px dashed rgba(220, 20, 60, 0.3);
             border-radius: 20px;
-            padding: 30px;
-            text-align: center;
+            padding: 25px;
             margin-bottom: 30px;
             display: none;
         }
 
-        .upload-section.active {
+        .admin-panel.active {
             display: block;
         }
 
-        .upload-section h3 {
+        .admin-panel h3 {
             margin-bottom: 15px;
             color: #ff6b6b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn-upload {
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #c41e3a 0%, #8b0046 100%);
+        .admin-panel p {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-admin {
+            padding: 12px 24px;
             border: none;
-            border-radius: 16px;
-            color: white;
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0046 100%);
+            color: white;
         }
 
         .btn-upload:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(196, 30, 58, 0.4);
+        }
+
+        .btn-manage {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+
+        .btn-manage:hover {
+            background: rgba(255, 193, 7, 0.2);
         }
 
         .hidden {
@@ -289,6 +337,10 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .gallery-card {
@@ -376,7 +428,7 @@
         }
 
         .filter-btn {
-            padding: 12px 28px;
+            padding: 12px 24px;
             border: 1px solid rgba(255,100,120,0.15);
             background: rgba(255,255,255,0.02);
             color: #a0a0a0;
@@ -435,14 +487,12 @@
                 0 5px 25px rgba(220, 20, 60, 0.1);
         }
 
-        .search-bar::before {
-            content: '🔍';
+        .search-icon {
             position: absolute;
-            left: 20px;
+            left: 18px;
             top: 50%;
             transform: translateY(-50%);
             opacity: 0.5;
-            font-size: 16px;
         }
 
         .search-bar input::placeholder {
@@ -560,6 +610,9 @@
             letter-spacing: 1px;
             border: 1px solid rgba(255,100,120,0.2);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .content-type-badge.video { 
@@ -639,17 +692,6 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        .play-icon::after {
-            content: '';
-            width: 0;
-            height: 0;
-            border-left: 22px solid white;
-            border-top: 14px solid transparent;
-            border-bottom: 14px solid transparent;
-            margin-left: 6px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
-
         .quality-badge {
             position: absolute;
             top: 15px;
@@ -664,17 +706,42 @@
             box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
         }
 
+        .delete-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(220, 20, 60, 0.9);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #ff0000;
+            transform: scale(1.1);
+        }
+
+        .content-item:hover .delete-btn {
+            display: flex;
+        }
+
+        .content-type-badge {
+            right: 60px;
+        }
+
         .empty-state {
             text-align: center;
             padding: 80px 20px;
             color: #666;
             grid-column: 1 / -1;
-        }
-
-        .empty-state-icon {
-            font-size: 56px;
-            margin-bottom: 20px;
-            opacity: 0.4;
         }
 
         .loading-skeleton {
@@ -715,8 +782,8 @@
                 text-align: center;
             }
 
-            .upload-section {
-                padding: 20px;
+            .admin-actions {
+                justify-content: center;
             }
         }
 
@@ -784,10 +851,90 @@
     </style>
 </head>
 <body>
+    <!-- SVG Icons Definitions -->
+    <svg style="display: none;">
+        <defs>
+            <!-- Adult Content Icon -->
+            <symbol id="icon-adult" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+            </symbol>
+            <!-- Google Icon -->
+            <symbol id="icon-google" viewBox="0 0 24 24">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </symbol>
+            <!-- Logout Icon -->
+            <symbol id="icon-logout" viewBox="0 0 24 24">
+                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+            </symbol>
+            <!-- Upload Icon -->
+            <symbol id="icon-upload" viewBox="0 0 24 24">
+                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+            </symbol>
+            <!-- Manage Icon -->
+            <symbol id="icon-manage" viewBox="0 0 24 24">
+                <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
+            </symbol>
+            <!-- Lock Icon -->
+            <symbol id="icon-lock" viewBox="0 0 24 24">
+                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+            </symbol>
+            <!-- Search Icon -->
+            <symbol id="icon-search" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </symbol>
+            <!-- Folder Icon -->
+            <symbol id="icon-folder" viewBox="0 0 24 24">
+                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+            </symbol>
+            <!-- Image Icon -->
+            <symbol id="icon-image" viewBox="0 0 24 24">
+                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+            </symbol>
+            <!-- Video Icon -->
+            <symbol id="icon-video" viewBox="0 0 24 24">
+                <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+            </symbol>
+            <!-- GIF Icon -->
+            <symbol id="icon-gif" viewBox="0 0 24 24">
+                <path d="M11.5 9H13v6h-1.5zM9 9H6c-.6 0-1 .5-1 1v4c0 .5.4 1 1 1h3c.6 0 1-.5 1-1v-2H8.5v1.5h-2v-3H10V10c0-.5-.4-1-1-1zm10 1.5V9h-4.5v6H16v-2h2v-1.5h-2v-1z"/>
+            </symbol>
+            <!-- Play Icon -->
+            <symbol id="icon-play" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+            </symbol>
+            <!-- Delete Icon -->
+            <symbol id="icon-delete" viewBox="0 0 24 24">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </symbol>
+            <!-- Check Icon -->
+            <symbol id="icon-check" viewBox="0 0 24 24">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+            </symbol>
+            <!-- Warning Icon -->
+            <symbol id="icon-warning" viewBox="0 0 24 24">
+                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+            </symbol>
+            <!-- User Icon -->
+            <symbol id="icon-user" viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </symbol>
+            <!-- Close Icon -->
+            <symbol id="icon-close" viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </symbol>
+        </defs>
+    </svg>
+
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
-            <h1>🔞 Acceso Exclusivo</h1>
+            <h1>
+                <svg class="icon icon-large"><use href="#icon-adult"/></svg>
+                Acceso Exclusivo
+            </h1>
             <p class="subtitle">Contenido para adultos mayores de 18 años</p>
             
             <div class="age-warning">
@@ -803,12 +950,7 @@
             </div>
 
             <button class="btn-google" id="googleBtn" onclick="loginWithGoogle()" disabled>
-                <svg width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
+                <svg class="icon"><use href="#icon-google"/></svg>
                 Continuar con Google
             </button>
             
@@ -822,29 +964,40 @@
             <div class="user-bar">
                 <div class="user-info">
                     <div class="user-avatar" id="userAvatar">
-                        <span id="avatarInitial">U</span>
+                        <svg class="icon" style="width: 24px; height: 24px;"><use href="#icon-user"/></svg>
                     </div>
                     <div class="user-details">
-                        <h4 id="userName">Usuario <span id="adminBadge" class="admin-badge hidden">Admin</span></h4>
+                        <h4 id="userName">
+                            Usuario
+                            <span id="adminBadge" class="admin-badge hidden">Admin</span>
+                        </h4>
                         <span id="userEmail">email@example.com</span>
                     </div>
                 </div>
-                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
-            </div>
-
-            <!-- Admin Upload Section -->
-            <div id="uploadSection" class="upload-section">
-                <h3>📤 Panel de Administrador - Subir Contenido</h3>
-                <p style="color: #aaa; margin-bottom: 20px; font-size: 14px;">
-                    Las imágenes y videos se suben a Cloudinary y se guardan en Firebase
-                </p>
-                <button class="btn-upload" onclick="openUploadWidget()">
-                    <span>⬆️</span> Subir Imagen o Video
+                <button class="btn-logout" onclick="logout()">
+                    <svg class="icon"><use href="#icon-logout"/></svg>
+                    Cerrar Sesión
                 </button>
             </div>
 
+            <!-- Admin Panel - Solo visible para admin -->
+            <div id="adminPanel" class="admin-panel">
+                <h3>
+                    <svg class="icon"><use href="#icon-manage"/></svg>
+                    Panel de Administrador
+                </h3>
+                <p>Control total del contenido. Puedes subir y eliminar imágenes/videos.</p>
+                <div class="admin-actions">
+                    <button class="btn-admin btn-upload" onclick="openUploadWidget()">
+                        <svg class="icon"><use href="#icon-upload"/></svg>
+                        Subir Contenido
+                    </button>
+                </div>
+            </div>
+
             <div class="age-verification">
-                🔓 Sesión iniciada - Contenido para Adultos +18
+                <svg class="icon"><use href="#icon-lock"/></svg>
+                Sesión iniciada - Contenido para Adultos +18
             </div>
 
             <div class="gallery-card">
@@ -856,13 +1009,26 @@
                 </div>
 
                 <div class="type-filter">
-                    <button class="filter-btn active" onclick="setType('all')">📁 Todo</button>
-                    <button class="filter-btn" onclick="setType('image')">🖼️ Fotos</button>
-                    <button class="filter-btn" onclick="setType('video')">🎥 Videos</button>
-                    <button class="filter-btn" onclick="setType('gif')">🎞️ GIFs</button>
+                    <button class="filter-btn active" onclick="setType('all')">
+                        <svg class="icon"><use href="#icon-folder"/></svg>
+                        Todo
+                    </button>
+                    <button class="filter-btn" onclick="setType('image')">
+                        <svg class="icon"><use href="#icon-image"/></svg>
+                        Fotos
+                    </button>
+                    <button class="filter-btn" onclick="setType('video')">
+                        <svg class="icon"><use href="#icon-video"/></svg>
+                        Videos
+                    </button>
+                    <button class="filter-btn" onclick="setType('gif')">
+                        <svg class="icon"><use href="#icon-gif"/></svg>
+                        GIFs
+                    </button>
                 </div>
 
                 <div class="search-bar">
+                    <svg class="icon search-icon"><use href="#icon-search"/></svg>
                     <input type="text" id="searchInput" placeholder="Buscar contenido..." onkeyup="filterContent()">
                 </div>
 
@@ -898,7 +1064,9 @@
     <!-- Modal -->
     <div id="modal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <button class="modal-close" onclick="closeModal()">
+                <svg class="icon"><use href="#icon-close"/></svg>
+            </button>
             <div id="modalMedia"></div>
         </div>
     </div>
@@ -930,7 +1098,6 @@
             console.log("Firebase inicializado correctamente");
         } catch (error) {
             console.error("Error inicializando Firebase:", error);
-            alert("Error al conectar con Firebase. Verifica la consola.");
         }
 
         const auth = firebase.auth();
@@ -952,14 +1119,9 @@
 
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({
-                prompt: 'select_account'
-            });
+            provider.setCustomParameters({ prompt: 'select_account' });
             
             auth.signInWithPopup(provider)
-                .then((result) => {
-                    console.log("Login exitoso:", result.user.email);
-                })
                 .catch((error) => {
                     console.error("Error de login:", error);
                     showError(getErrorMessage(error.code));
@@ -982,20 +1144,21 @@
                 'auth/popup-closed-by-user': 'Ventana cerrada. Intenta de nuevo.',
                 'auth/cancelled-popup-request': 'Operación cancelada.',
                 'auth/account-exists-with-different-credential': 'Cuenta existente con otro método.',
-                'auth/unauthorized-domain': 'Dominio no autorizado. Agrega este dominio en Firebase Console > Authentication > Settings > Authorized domains',
-                'auth/operation-not-allowed': 'Google Sign-In no habilitado. Ve a Firebase Console > Authentication > Sign-in method > Google > Enable',
-                'auth/configuration-not-found': 'Configuración de Firebase incorrecta. Verifica apiKey y authDomain.',
-                'auth/invalid-api-key': 'API Key inválida. Verifica la configuración.'
+                'auth/unauthorized-domain': 'Dominio no autorizado.',
+                'auth/operation-not-allowed': 'Google Sign-In no habilitado en Firebase.',
+                'auth/configuration-not-found': 'Configuración incorrecta.',
+                'auth/invalid-api-key': 'API Key inválida.'
             };
-            return messages[code] || 'Error: ' + error.message;
+            return messages[code] || 'Error de autenticación';
         }
 
         // Auth State Listener
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
+                // Verificación estricta del admin
                 isAdmin = user.email === ADMIN_EMAIL;
-                console.log("Usuario autenticado:", user.email, "Admin:", isAdmin);
+                console.log("Usuario:", user.email, "Admin:", isAdmin);
                 showMainApp(user);
                 loadContent();
             } else {
@@ -1014,23 +1177,27 @@
             document.getElementById('loginOverlay').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             
-            document.getElementById('userName').textContent = user.displayName || 'Usuario';
+            document.getElementById('userName').childNodes[0].textContent = user.displayName || 'Usuario';
             document.getElementById('userEmail').textContent = user.email;
             
-            const avatarEl = document.getElementById('avatarInitial');
+            const avatarEl = document.getElementById('userAvatar');
             if (user.photoURL) {
                 avatarEl.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
             } else {
-                avatarEl.textContent = (user.displayName || user.email)[0].toUpperCase();
+                avatarEl.innerHTML = `<svg class="icon" style="width: 24px; height: 24px;"><use href="#icon-user"/></svg>`;
             }
 
+            // Mostrar controles de admin SOLO si es el admin
             if (isAdmin) {
                 document.getElementById('adminBadge').classList.remove('hidden');
-                document.getElementById('uploadSection').classList.add('active');
+                document.getElementById('adminPanel').classList.add('active');
+            } else {
+                document.getElementById('adminBadge').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('active');
             }
         }
 
-        // ==================== CLOUDINARY UPLOAD ====================
+        // ==================== CLOUDINARY UPLOAD (SOLO ADMIN) ====================
 
         function openUploadWidget() {
             if (!isAdmin) {
@@ -1076,7 +1243,6 @@
                 }
                 
                 if (result.event === 'success') {
-                    console.log('Upload exitoso:', result.info);
                     saveToFirebase(result.info);
                 }
             });
@@ -1115,7 +1281,7 @@
                 })
                 .catch((error) => {
                     console.error('Error guardando:', error);
-                    alert('Error al guardar en Firebase: ' + error.message);
+                    alert('Error al guardar: ' + error.message);
                 });
         }
 
@@ -1123,6 +1289,35 @@
             if (resourceType === 'video') return 'video';
             if (format === 'gif') return 'gif';
             return 'image';
+        }
+
+        // ==================== ELIMINAR CONTENIDO (SOLO ADMIN) ====================
+
+        function deleteContent(id, event) {
+            event.stopPropagation();
+            
+            if (!isAdmin) {
+                alert('No tienes permisos para eliminar contenido');
+                return;
+            }
+
+            if (!confirm('¿Estás seguro de eliminar este contenido permanentemente?')) {
+                return;
+            }
+
+            const item = contentData.find(i => i.id === id);
+            if (!item) return;
+
+            // Eliminar de Firebase
+            database.ref('content/' + id).remove()
+                .then(() => {
+                    console.log('Eliminado de Firebase');
+                    // Opcional: Eliminar de Cloudinary también (requiere backend)
+                })
+                .catch((error) => {
+                    console.error('Error eliminando:', error);
+                    alert('Error al eliminar: ' + error.message);
+                });
         }
 
         // ==================== CONTENT MANAGEMENT ====================
@@ -1192,7 +1387,7 @@
             if (filtered.length === 0) {
                 grid.innerHTML = `
                     <div class="empty-state">
-                        <div class="empty-state-icon">💋</div>
+                        <svg class="icon icon-large" style="opacity: 0.4;"><use href="#icon-image"/></svg>
                         <h3>No hay contenido aún</h3>
                         <p style="margin-top: 10px; font-size: 14px;">
                             ${isAdmin ? 'Usa el panel de admin para subir contenido' : 'Vuelve pronto para ver nuevo contenido'}
@@ -1204,10 +1399,16 @@
 
             grid.innerHTML = filtered.map(item => `
                 <div class="content-item" onclick="openModal('${item.id}')">
+                    ${isAdmin ? `<button class="delete-btn" onclick="deleteContent('${item.id}', event)" title="Eliminar">
+                        <svg class="icon" style="width: 18px; height: 18px;"><use href="#icon-delete"/></svg>
+                    </button>` : ''}
                     <span class="quality-badge">${item.quality || 'HD'}</span>
                     <img src="${item.thumbnailUrl || item.url}" alt="${item.title}" loading="lazy">
-                    <span class="content-type-badge ${item.type}">${item.type}</span>
-                    ${item.type === 'video' ? '<div class="play-icon"></div>' : ''}
+                    <span class="content-type-badge ${item.type}">
+                        ${getTypeIcon(item.type)}
+                        ${item.type}
+                    </span>
+                    ${item.type === 'video' ? `<div class="play-icon"><svg class="icon" style="width: 32px; height: 32px; fill: white;"><use href="#icon-play"/></svg></div>` : ''}
                     <div class="content-overlay">
                         <div class="content-title">${item.title}</div>
                         <div class="content-meta">
@@ -1217,6 +1418,15 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                image: '<svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-image"/></svg>',
+                video: '<svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-video"/></svg>',
+                gif: '<svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-gif"/></svg>'
+            };
+            return icons[type] || '';
         }
 
         function openModal(id) {
