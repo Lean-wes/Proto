@@ -4,948 +4,419 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sensual Gallery +18</title>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
-    <!-- Cloudinary Widget -->
     <script src="https://upload-widget.cloudinary.com/latest/global/all.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: #0d0208;
             min-height: 100vh;
             color: #fff;
             padding: 20px;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(120, 20, 60, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(80, 10, 100, 0.1) 0%, transparent 50%);
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1400px; margin: 0 auto; }
 
-        /* Iconos SVG */
-        .icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
+        /* SVG Icons */
+        .icon { width: 20px; height: 20px; fill: currentColor; }
+        .icon-large { width: 48px; height: 48px; }
 
-        .icon-large {
-            width: 48px;
-            height: 48px;
-        }
-
-        /* Login Overlay */
+        /* Login */
         .login-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(13, 2, 8, 0.98);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
+            position: fixed; inset: 0; background: rgba(13, 2, 8, 0.98);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
-
         .login-box {
-            background: linear-gradient(145deg, #1a0b14 0%, #0f0510 100%);
-            padding: 50px;
-            border-radius: 30px;
+            background: linear-gradient(145deg, #1a0b14, #0f0510);
+            padding: 50px; border-radius: 30px;
             border: 1px solid rgba(220, 20, 60, 0.2);
-            box-shadow: 
-                0 25px 80px rgba(0,0,0,0.8),
-                0 0 100px rgba(120, 20, 60, 0.1);
-            text-align: center;
-            max-width: 450px;
-            width: 90%;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.8);
+            text-align: center; max-width: 450px; width: 90%;
         }
-
         .login-box h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 32px; margin-bottom: 10px;
             background: linear-gradient(135deg, #ff6b6b, #c41e3a);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
         }
-
-        .login-box .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
         .age-warning {
             background: rgba(220, 20, 60, 0.1);
             border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
-            font-size: 13px;
-            color: #ff6b6b;
+            border-radius: 16px; padding: 20px; margin: 30px 0;
+            font-size: 13px; color: #ff6b6b;
         }
-
-        .age-warning strong {
-            display: block;
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
+        .age-warning strong { display: block; font-size: 24px; margin-bottom: 8px; }
+        
         .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 25px;
-            text-align: left;
-            padding: 15px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255,100,120,0.1);
+            display: flex; align-items: flex-start; gap: 12px;
+            margin-bottom: 25px; text-align: left;
+            padding: 15px; background: rgba(255,255,255,0.03);
+            border-radius: 12px; border: 1px solid rgba(255,100,120,0.1);
         }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #c41e3a;
-            margin-top: 2px;
-            cursor: pointer;
-        }
-
-        .checkbox-group label {
-            font-size: 13px;
-            color: #aaa;
-            line-height: 1.5;
-            cursor: pointer;
-        }
-
-        .checkbox-group label strong {
-            color: #ff6b6b;
-        }
+        .checkbox-group input { width: 20px; height: 20px; accent-color: #c41e3a; margin-top: 2px; }
+        .checkbox-group label { font-size: 13px; color: #aaa; line-height: 1.5; }
+        .checkbox-group label strong { color: #ff6b6b; }
 
         .btn-google {
-            width: 100%;
-            padding: 16px;
-            background: #fff;
-            border: none;
-            border-radius: 16px;
-            color: #333;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
+            width: 100%; padding: 16px; background: #fff; border: none;
+            border-radius: 16px; color: #333; font-size: 16px; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
         }
-
-        .btn-google:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.1);
-        }
-
-        .btn-google:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .btn-google:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-google:hover:not(:disabled) { transform: translateY(-2px); }
 
         .error-msg {
-            color: #ff6b6b;
-            font-size: 13px;
-            margin-top: 15px;
-            display: none;
-            padding: 10px;
-            background: rgba(220, 20, 60, 0.1);
-            border-radius: 8px;
+            color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none;
+            padding: 10px; background: rgba(220, 20, 60, 0.1); border-radius: 8px;
         }
 
+        /* User Bar */
         .user-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: rgba(0,0,0,0.4);
-            border-radius: 16px;
-            margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 25px; background: rgba(0,0,0,0.4);
+            border-radius: 16px; margin-bottom: 20px;
             border: 1px solid rgba(255,100,120,0.1);
-            backdrop-filter: blur(10px);
-            flex-wrap: wrap;
-            gap: 15px;
+            flex-wrap: wrap; gap: 15px;
         }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .user-info { display: flex; align-items: center; gap: 12px; }
         .user-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            width: 45px; height: 45px; border-radius: 50%;
             background: linear-gradient(135deg, #c41e3a, #8b0046);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
             overflow: hidden;
         }
-
-        .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .user-details h4 {
-            font-size: 16px;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .user-details span {
-            font-size: 12px;
-            color: #666;
-        }
-
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .user-details h4 { font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        .user-details span { font-size: 12px; color: #666; }
+        
         .admin-badge {
             background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #000; padding: 4px 12px; border-radius: 20px;
+            font-size: 10px; font-weight: 800; text-transform: uppercase;
         }
 
         .btn-logout {
-            padding: 10px 20px;
-            background: rgba(220, 20, 60, 0.1);
+            padding: 10px 20px; background: rgba(220, 20, 60, 0.1);
             border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 12px;
-            color: #ff6b6b;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-radius: 12px; color: #ff6b6b; font-size: 13px;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
         }
 
-        .btn-logout:hover {
-            background: rgba(220, 20, 60, 0.2);
-        }
-
+        /* Admin Panel */
         .admin-panel {
             background: linear-gradient(145deg, rgba(196, 30, 58, 0.1), rgba(139, 0, 70, 0.1));
             border: 2px dashed rgba(220, 20, 60, 0.3);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            display: none;
+            border-radius: 20px; padding: 25px; margin-bottom: 30px; display: none;
         }
-
-        .admin-panel.active {
-            display: block;
-        }
-
-        .admin-panel h3 {
-            margin-bottom: 15px;
-            color: #ff6b6b;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .admin-panel p {
-            color: #aaa;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
+        .admin-panel.active { display: block; }
+        .admin-panel h3 { margin-bottom: 15px; color: #ff6b6b; display: flex; align-items: center; gap: 10px; }
+        .admin-actions { display: flex; gap: 15px; flex-wrap: wrap; }
+        
         .btn-admin {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            padding: 12px 24px; border: none; border-radius: 12px;
+            font-size: 14px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-upload { background: linear-gradient(135deg, #c41e3a, #8b0046); color: white; }
+        .btn-upload:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(196, 30, 58, 0.4); }
+
+        /* Metadata Form Modal */
+        .metadata-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: none; align-items: center; justify-content: center;
+            z-index: 3000; padding: 20px;
+        }
+        .metadata-modal.active { display: flex; }
+        
+        .metadata-form {
+            background: linear-gradient(145deg, #1a0b14, #0f0510);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 24px; padding: 40px; max-width: 500px; width: 100%;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.9);
+        }
+        .metadata-form h3 {
+            margin-bottom: 25px; color: #ff6b6b;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .preview-container {
+            width: 100%; height: 200px; border-radius: 12px;
+            overflow: hidden; margin-bottom: 20px;
+            background: #000; display: flex; align-items: center; justify-content: center;
+        }
+        .preview-container img, .preview-container video {
+            max-width: 100%; max-height: 100%; object-fit: contain;
         }
 
-        .btn-upload {
-            background: linear-gradient(135deg, #c41e3a 0%, #8b0046 100%);
-            color: white;
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block; margin-bottom: 8px; font-size: 13px;
+            color: #aaa; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .form-group input, .form-group select {
+            width: 100%; padding: 14px; border: 1px solid rgba(255,100,120,0.2);
+            background: rgba(0,0,0,0.4); border-radius: 12px; color: #fff;
+            font-size: 15px; outline: none;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: rgba(220, 20, 60, 0.5);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
         }
 
-        .btn-upload:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(196, 30, 58, 0.4);
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .radio-group {
+            display: flex; gap: 15px; flex-wrap: wrap;
+        }
+        .radio-option {
+            flex: 1; min-width: 120px;
+        }
+        .radio-option input { display: none; }
+        .radio-option label {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px; border: 2px solid rgba(255,100,120,0.2);
+            border-radius: 12px; cursor: pointer; text-align: center;
+            transition: all 0.3s;
+        }
+        .radio-option input:checked + label {
+            border-color: #c41e3a; background: rgba(196, 30, 58, 0.2);
+            color: #fff;
         }
 
-        .btn-manage {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-            color: #ffc107;
+        .form-actions {
+            display: flex; gap: 15px; margin-top: 25px;
+        }
+        .btn-primary {
+            flex: 1; padding: 14px; background: linear-gradient(135deg, #c41e3a, #8b0046);
+            border: none; border-radius: 12px; color: white;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+        .btn-secondary {
+            flex: 1; padding: 14px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,100,120,0.3); border-radius: 12px;
+            color: #aaa; font-size: 16px; cursor: pointer;
         }
 
-        .btn-manage:hover {
-            background: rgba(255, 193, 7, 0.2);
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .age-verification {
             background: linear-gradient(90deg, rgba(139, 0, 0, 0.3), rgba(80, 0, 40, 0.3));
             border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 12px;
-            padding: 12px 20px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 13px;
-            color: #ff6b6b;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            border-radius: 12px; padding: 12px 20px; margin-bottom: 20px;
+            text-align: center; font-size: 13px; color: #ff6b6b;
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
+        /* Gallery */
         .gallery-card {
-            background: linear-gradient(145deg, #1a0b14 0%, #0f0510 100%);
-            border-radius: 24px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 
-                0 25px 80px rgba(0,0,0,0.8), 
-                inset 0 1px 0 rgba(255,255,255,0.05),
-                0 0 100px rgba(120, 20, 60, 0.1);
+            background: linear-gradient(145deg, #1a0b14, #0f0510);
+            border-radius: 24px; padding: 30px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.8);
             border: 1px solid rgba(255,100,120,0.08);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gallery-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(180, 40, 80, 0.08) 0%, transparent 60%);
-            pointer-events: none;
         }
 
         .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 50px;
+            display: flex; justify-content: center; gap: 50px;
             margin-bottom: 30px;
-            position: relative;
-            z-index: 1;
         }
-
         .toggle-group {
-            display: flex;
-            background: rgba(0,0,0,0.5);
-            border-radius: 50px;
-            padding: 8px;
-            gap: 6px;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,100,120,0.1);
+            display: flex; background: rgba(0,0,0,0.5);
+            border-radius: 50px; padding: 8px; gap: 6px;
         }
-
         .toggle-btn {
-            padding: 14px 35px;
-            border: none;
-            background: transparent;
-            color: #9ca3af;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.5px;
+            padding: 14px 35px; border: none; background: transparent;
+            color: #9ca3af; font-size: 16px; font-weight: 600;
+            cursor: pointer; border-radius: 50px; transition: all 0.3s;
         }
-
         .toggle-btn.active {
-            background: linear-gradient(135deg, #c41e3a 0%, #8b0046 100%);
-            color: white;
-            box-shadow: 
-                0 4px 25px rgba(196, 30, 58, 0.5),
-                inset 0 1px 0 rgba(255,255,255,0.2);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .toggle-btn:hover:not(.active) {
-            color: #fff;
-            background: rgba(255,100,120,0.08);
+            background: linear-gradient(135deg, #c41e3a, #8b0046);
+            color: white; box-shadow: 0 4px 25px rgba(196, 30, 58, 0.5);
         }
 
         .type-filter {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
+            display: flex; justify-content: center; gap: 12px;
+            margin-bottom: 25px; flex-wrap: wrap;
         }
-
         .filter-btn {
-            padding: 12px 24px;
-            border: 1px solid rgba(255,100,120,0.15);
-            background: rgba(255,255,255,0.02);
-            color: #a0a0a0;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
+            padding: 12px 24px; border: 1px solid rgba(255,100,120,0.15);
+            background: rgba(255,255,255,0.02); color: #a0a0a0;
+            font-size: 14px; cursor: pointer; border-radius: 16px;
+            display: flex; align-items: center; gap: 8px; transition: all 0.3s;
         }
-
-        .filter-btn:hover {
-            border-color: rgba(220, 20, 60, 0.4);
-            color: #fff;
-            transform: translateY(-2px);
-            background: rgba(220, 20, 60, 0.08);
-            box-shadow: 0 5px 20px rgba(220, 20, 60, 0.15);
-        }
-
-        .filter-btn.active {
-            background: linear-gradient(135deg, rgba(196, 30, 58, 0.25) 0%, rgba(139, 0, 70, 0.25) 100%);
+        .filter-btn:hover, .filter-btn.active {
             border-color: rgba(220, 20, 60, 0.5);
-            color: #fff;
-            box-shadow: 
-                0 0 30px rgba(220, 20, 60, 0.2),
-                inset 0 1px 0 rgba(255,255,255,0.1);
+            background: rgba(220, 20, 60, 0.2); color: #fff;
         }
 
         .search-bar {
-            position: relative;
-            max-width: 450px;
-            margin: 0 auto 15px;
-            z-index: 1;
+            position: relative; max-width: 450px; margin: 0 auto 15px;
         }
-
         .search-bar input {
-            width: 100%;
-            padding: 16px 25px 16px 50px;
+            width: 100%; padding: 16px 25px 16px 50px;
             border: 1px solid rgba(255,100,120,0.15);
-            background: rgba(0,0,0,0.4);
-            border-radius: 50px;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.4); border-radius: 50px;
+            color: #fff; font-size: 15px; outline: none;
         }
-
-        .search-bar input:focus {
-            border-color: rgba(220, 20, 60, 0.5);
-            box-shadow: 
-                0 0 0 4px rgba(220, 20, 60, 0.1),
-                0 5px 25px rgba(220, 20, 60, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.5;
-        }
-
-        .search-bar input::placeholder {
-            color: #666;
-        }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
 
         .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
-            opacity: 0.6;
-            transition: opacity 0.3s ease;
+            display: flex; justify-content: center; gap: 10px;
+            margin-bottom: 20px; flex-wrap: wrap; opacity: 0.6;
         }
-
-        .stats-bar:hover {
-            opacity: 1;
-        }
-
         .stat {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            border: 1px solid rgba(255,100,120,0.08);
-            font-size: 11px;
-            color: #666;
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 12px; background: rgba(255,255,255,0.03);
+            border-radius: 20px; border: 1px solid rgba(255,100,120,0.08);
+            font-size: 11px; color: #666;
         }
-
-        .stat-value {
-            font-weight: 700;
-            color: #dc143c;
-            font-size: 12px;
-        }
+        .stat-value { font-weight: 700; color: #dc143c; font-size: 12px; }
 
         .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 25px;
-            position: relative;
-            z-index: 1;
         }
 
         .content-item {
-            aspect-ratio: 3/4;
-            background: linear-gradient(145deg, #1f0f18 0%, #150810 100%);
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            aspect-ratio: 3/4; background: linear-gradient(145deg, #1f0f18, #150810);
+            border-radius: 20px; overflow: hidden; position: relative;
+            cursor: pointer; transition: all 0.5s;
             border: 1px solid rgba(255,100,120,0.08);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
-
         .content-item:hover {
             transform: translateY(-10px) scale(1.02);
-            box-shadow: 
-                0 30px 60px rgba(0,0,0,0.6),
-                0 0 40px rgba(220, 20, 60, 0.15);
-            border-color: rgba(220, 20, 60, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(220, 20, 60, 0.15);
         }
 
         .content-item img, .content-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s ease;
-            filter: brightness(0.95) contrast(1.05);
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s;
         }
-
-        .content-item:hover img, .content-item:hover video {
-            transform: scale(1.08);
-            filter: brightness(1.05) contrast(1.1);
-        }
+        .content-item:hover img, .content-item:hover video { transform: scale(1.08); }
 
         .content-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                to top, 
-                rgba(10, 0, 5, 0.95) 0%, 
-                rgba(10, 0, 5, 0.6) 40%,
-                transparent 100%
-            );
-            opacity: 0;
-            transition: all 0.4s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(10,0,5,0.95), rgba(10,0,5,0.6), transparent);
+            opacity: 0; transition: opacity 0.4s;
+            display: flex; flex-direction: column; justify-content: flex-end;
             padding: 25px;
-            backdrop-filter: blur(2px);
         }
-
-        .content-item:hover .content-overlay {
-            opacity: 1;
-        }
+        .content-item:hover .content-overlay { opacity: 1; }
 
         .content-type-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(15px);
-            padding: 8px 14px;
-            border-radius: 25px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(15px);
+            padding: 8px 14px; border-radius: 25px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
             border: 1px solid rgba(255,100,120,0.2);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            display: flex; align-items: center; gap: 6px;
         }
-
-        .content-type-badge.video { 
-            color: #ff6b9d; 
-            background: rgba(255, 107, 157, 0.15);
-        }
-        .content-type-badge.image { 
-            color: #ff8fab; 
-            background: rgba(255, 143, 171, 0.15);
-        }
-        .content-type-badge.gif { 
-            color: #ffb3c6; 
-            background: rgba(255, 179, 198, 0.15);
-        }
-
-        .content-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #fff;
-            letter-spacing: 0.3px;
-        }
-
-        .content-meta {
-            font-size: 13px;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .origin-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .origin-badge.real {
-            background: rgba(40, 167, 69, 0.15);
-            color: #4ade80;
-            border: 1px solid rgba(40, 167, 69, 0.3);
-        }
-
-        .origin-badge.ai {
-            background: rgba(220, 20, 60, 0.15);
-            color: #ff6b6b;
-            border: 1px solid rgba(220, 20, 60, 0.3);
-        }
-
-        .play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, rgba(220, 20, 60, 0.9) 0%, rgba(139, 0, 70, 0.9) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 40px rgba(220, 20, 60, 0.4);
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-
-        .content-item:hover .play-icon {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
+        .content-type-badge.video { color: #ff6b9d; background: rgba(255,107,157,0.15); }
+        .content-type-badge.image { color: #ff8fab; background: rgba(255,143,171,0.15); }
+        .content-type-badge.gif { color: #ffb3c6; background: rgba(255,179,198,0.15); }
 
         .quality-badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(220, 20, 60, 0.9);
-            color: white;
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+            position: absolute; top: 15px; left: 15px;
+            background: rgba(220,20,60,0.9); color: white;
+            padding: 6px 10px; border-radius: 8px;
+            font-size: 11px; font-weight: 800;
         }
 
         .delete-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(220, 20, 60, 0.9);
-            border: none;
-            color: white;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
+            position: absolute; top: 15px; right: 60px;
+            background: rgba(220,20,60,0.9); border: none;
+            color: white; width: 36px; height: 36px;
+            border-radius: 50%; cursor: pointer;
+            display: none; align-items: center; justify-content: center;
             z-index: 10;
-            transition: all 0.3s ease;
         }
+        .content-item:hover .delete-btn { display: flex; }
+        .delete-btn:hover { background: #ff0000; transform: scale(1.1); }
 
-        .delete-btn:hover {
-            background: #ff0000;
-            transform: scale(1.1);
+        .play-icon {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, rgba(220,20,60,0.9), rgba(139,0,70,0.9));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: all 0.4s;
         }
+        .content-item:hover .play-icon { opacity: 1; }
 
-        .content-item:hover .delete-btn {
-            display: flex;
+        .empty-state { text-align: center; padding: 80px 20px; color: #666; grid-column: 1 / -1; }
+
+        /* Modal */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; align-items: center; justify-content: center;
+            z-index: 2000; padding: 20px;
         }
-
-        .content-type-badge {
-            right: 60px;
+        .modal.active { display: flex; }
+        .modal-content { max-width: 90vw; max-height: 90vh; position: relative; }
+        .modal-content img, .modal-content video {
+            max-width: 90vw; max-height: 85vh;
+            border-radius: 16px; box-shadow: 0 25px 80px rgba(0,0,0,0.8);
         }
-
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: #666;
-            grid-column: 1 / -1;
-        }
-
-        .loading-skeleton {
-            aspect-ratio: 3/4;
-            background: linear-gradient(90deg, #1f0f18 25%, #2d1a24 50%, #1f0f18 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 20px;
-        }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        .modal-close {
+            position: absolute; top: -50px; right: 0;
+            background: rgba(255,255,255,0.1); border: none;
+            color: white; width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer;
         }
 
         @media (max-width: 768px) {
-            .login-box {
-                padding: 30px;
-            }
-            
-            .header {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .toggle-btn {
-                padding: 12px 25px;
-                font-size: 14px;
-            }
-            
-            .content-grid {
-                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-                gap: 15px;
-            }
-
-            .user-bar {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .admin-actions {
-                justify-content: center;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #0d0208;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #8b0046, #c41e3a);
-            border-radius: 5px;
-        }
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            max-width: 90vw;
-            max-height: 90vh;
-            position: relative;
-        }
-
-        .modal-content img, .modal-content video {
-            max-width: 100%;
-            max-height: 90vh;
-            border-radius: 16px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.8);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            background: rgba(220, 20, 60, 0.5);
+            .content-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- SVG Icons Definitions -->
+    <!-- SVG Definitions -->
     <svg style="display: none;">
         <defs>
-            <!-- Adult Content Icon -->
-            <symbol id="icon-adult" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-            </symbol>
-            <!-- Google Icon -->
+            <symbol id="icon-adult" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></symbol>
             <symbol id="icon-google" viewBox="0 0 24 24">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </symbol>
-            <!-- Logout Icon -->
-            <symbol id="icon-logout" viewBox="0 0 24 24">
-                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-            </symbol>
-            <!-- Upload Icon -->
-            <symbol id="icon-upload" viewBox="0 0 24 24">
-                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
-            </symbol>
-            <!-- Manage Icon -->
-            <symbol id="icon-manage" viewBox="0 0 24 24">
-                <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
-            </symbol>
-            <!-- Lock Icon -->
-            <symbol id="icon-lock" viewBox="0 0 24 24">
-                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-            </symbol>
-            <!-- Search Icon -->
-            <symbol id="icon-search" viewBox="0 0 24 24">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </symbol>
-            <!-- Folder Icon -->
-            <symbol id="icon-folder" viewBox="0 0 24 24">
-                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-            </symbol>
-            <!-- Image Icon -->
-            <symbol id="icon-image" viewBox="0 0 24 24">
-                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-            </symbol>
-            <!-- Video Icon -->
-            <symbol id="icon-video" viewBox="0 0 24 24">
-                <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
-            </symbol>
-            <!-- GIF Icon -->
-            <symbol id="icon-gif" viewBox="0 0 24 24">
-                <path d="M11.5 9H13v6h-1.5zM9 9H6c-.6 0-1 .5-1 1v4c0 .5.4 1 1 1h3c.6 0 1-.5 1-1v-2H8.5v1.5h-2v-3H10V10c0-.5-.4-1-1-1zm10 1.5V9h-4.5v6H16v-2h2v-1.5h-2v-1z"/>
-            </symbol>
-            <!-- Play Icon -->
-            <symbol id="icon-play" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-            </symbol>
-            <!-- Delete Icon -->
-            <symbol id="icon-delete" viewBox="0 0 24 24">
-                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-            </symbol>
-            <!-- Check Icon -->
-            <symbol id="icon-check" viewBox="0 0 24 24">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-            </symbol>
-            <!-- Warning Icon -->
-            <symbol id="icon-warning" viewBox="0 0 24 24">
-                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-            </symbol>
-            <!-- User Icon -->
-            <symbol id="icon-user" viewBox="0 0 24 24">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </symbol>
-            <!-- Close Icon -->
-            <symbol id="icon-close" viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </symbol>
+            <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
+            <symbol id="icon-upload" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></symbol>
+            <symbol id="icon-manage" viewBox="0 0 24 24"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></symbol>
+            <symbol id="icon-lock" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></symbol>
+            <symbol id="icon-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
+            <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></symbol>
+            <symbol id="icon-image" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></symbol>
+            <symbol id="icon-video" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></symbol>
+            <symbol id="icon-gif" viewBox="0 0 24 24"><path d="M11.5 9H13v6h-1.5zM9 9H6c-.6 0-1 .5-1 1v4c0 .5.4 1 1 1h3c.6 0 1-.5 1-1v-2H8.5v1.5h-2v-3H10V10c0-.5-.4-1-1-1zm10 1.5V9h-4.5v6H16v-2h2v-1.5h-2v-1z"/></symbol>
+            <symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+            <symbol id="icon-delete" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></symbol>
+            <symbol id="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+            <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
+            <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
         </defs>
     </svg>
 
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
-            <h1>
-                <svg class="icon icon-large"><use href="#icon-adult"/></svg>
-                Acceso Exclusivo
-            </h1>
-            <p class="subtitle">Contenido para adultos mayores de 18 años</p>
+            <h1><svg class="icon icon-large"><use href="#icon-adult"/></svg> Acceso Exclusivo</h1>
+            <p style="color: #666; margin-bottom: 20px;">Contenido para adultos mayores de 18 años</p>
             
             <div class="age-warning">
                 <strong>+18</strong>
-                Este sitio contiene material para adultos. Debes ser mayor de edad para acceder.
+                Este sitio contiene material para adultos exclusivamente.
             </div>
 
             <div class="checkbox-group">
                 <input type="checkbox" id="ageConfirm" onchange="toggleLogin()">
                 <label for="ageConfirm">
-                    Confirmo que tengo <strong>18 años o más</strong> y acepto los términos de uso y política de privacidad de este sitio.
+                    Confirmo que soy mayor de <strong>18 años</strong> y acepto ver contenido para adultos.
                 </label>
             </div>
 
@@ -953,7 +424,6 @@
                 <svg class="icon"><use href="#icon-google"/></svg>
                 Continuar con Google
             </button>
-            
             <p id="errorMsg" class="error-msg"></p>
         </div>
     </div>
@@ -961,16 +431,14 @@
     <!-- Main App -->
     <div id="mainApp" class="hidden">
         <div class="container">
+            <!-- User Bar -->
             <div class="user-bar">
                 <div class="user-info">
                     <div class="user-avatar" id="userAvatar">
                         <svg class="icon" style="width: 24px; height: 24px;"><use href="#icon-user"/></svg>
                     </div>
                     <div class="user-details">
-                        <h4 id="userName">
-                            Usuario
-                            <span id="adminBadge" class="admin-badge hidden">Admin</span>
-                        </h4>
+                        <h4 id="userName">Usuario <span id="adminBadge" class="admin-badge hidden">Admin</span></h4>
                         <span id="userEmail">email@example.com</span>
                     </div>
                 </div>
@@ -980,17 +448,14 @@
                 </button>
             </div>
 
-            <!-- Admin Panel - Solo visible para admin -->
+            <!-- Admin Panel -->
             <div id="adminPanel" class="admin-panel">
-                <h3>
-                    <svg class="icon"><use href="#icon-manage"/></svg>
-                    Panel de Administrador
-                </h3>
-                <p>Control total del contenido. Puedes subir y eliminar imágenes/videos.</p>
+                <h3><svg class="icon"><use href="#icon-settings"/></svg> Panel de Administrador</h3>
+                <p style="color: #aaa; margin-bottom: 20px;">Sube contenido y gestiona la galería</p>
                 <div class="admin-actions">
                     <button class="btn-admin btn-upload" onclick="openUploadWidget()">
                         <svg class="icon"><use href="#icon-upload"/></svg>
-                        Subir Contenido
+                        Subir Nuevo Contenido
                     </button>
                 </div>
             </div>
@@ -1000,6 +465,7 @@
                 Sesión iniciada - Contenido para Adultos +18
             </div>
 
+            <!-- Gallery -->
             <div class="gallery-card">
                 <div class="header">
                     <div class="toggle-group">
@@ -1010,20 +476,16 @@
 
                 <div class="type-filter">
                     <button class="filter-btn active" onclick="setType('all')">
-                        <svg class="icon"><use href="#icon-folder"/></svg>
-                        Todo
+                        <svg class="icon"><use href="#icon-folder"/></svg> Todo
                     </button>
                     <button class="filter-btn" onclick="setType('image')">
-                        <svg class="icon"><use href="#icon-image"/></svg>
-                        Fotos
+                        <svg class="icon"><use href="#icon-image"/></svg> Fotos
                     </button>
                     <button class="filter-btn" onclick="setType('video')">
-                        <svg class="icon"><use href="#icon-video"/></svg>
-                        Videos
+                        <svg class="icon"><use href="#icon-video"/></svg> Videos
                     </button>
                     <button class="filter-btn" onclick="setType('gif')">
-                        <svg class="icon"><use href="#icon-gif"/></svg>
-                        GIFs
+                        <svg class="icon"><use href="#icon-gif"/></svg> GIFs
                     </button>
                 </div>
 
@@ -1033,26 +495,13 @@
                 </div>
 
                 <div class="stats-bar">
-                    <div class="stat">
-                        <span>Total:</span>
-                        <span class="stat-value" id="total-count">0</span>
-                    </div>
-                    <div class="stat">
-                        <span>Fotos:</span>
-                        <span class="stat-value" id="images-count">0</span>
-                    </div>
-                    <div class="stat">
-                        <span>Videos:</span>
-                        <span class="stat-value" id="videos-count">0</span>
-                    </div>
-                    <div class="stat">
-                        <span>GIFs:</span>
-                        <span class="stat-value" id="gifs-count">0</span>
-                    </div>
+                    <div class="stat"><span>Total:</span><span class="stat-value" id="total-count">0</span></div>
+                    <div class="stat"><span>Fotos:</span><span class="stat-value" id="images-count">0</span></div>
+                    <div class="stat"><span>Videos:</span><span class="stat-value" id="videos-count">0</span></div>
+                    <div class="stat"><span>GIFs:</span><span class="stat-value" id="gifs-count">0</span></div>
                 </div>
 
                 <div class="content-grid" id="contentGrid">
-                    <div class="loading-skeleton"></div>
                     <div class="loading-skeleton"></div>
                     <div class="loading-skeleton"></div>
                     <div class="loading-skeleton"></div>
@@ -1061,8 +510,72 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="modal" class="modal" onclick="closeModal()">
+    <!-- Metadata Form Modal -->
+    <div id="metadataModal" class="metadata-modal">
+        <div class="metadata-form">
+            <h3><svg class="icon"><use href="#icon-settings"/></svg> Configurar Contenido</h3>
+            
+            <div class="preview-container" id="previewContainer">
+                <!-- Preview se carga aquí -->
+            </div>
+
+            <div class="form-group">
+                <label>Título del contenido</label>
+                <input type="text" id="contentTitle" placeholder="Ej: Sesión fotográfica de verano">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tipo de origen</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="origin" id="originReal" value="real" checked>
+                            <label for="originReal">● Real</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="origin" id="originAI" value="ai">
+                            <label for="originAI">✦ IA</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="category" id="catImage" value="image" checked>
+                            <label for="catImage">
+                                <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-image"/></svg>
+                                Foto
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="category" id="catVideo" value="video">
+                            <label for="catVideo">
+                                <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-video"/></svg>
+                                Video
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="category" id="catGif" value="gif">
+                            <label for="catGif">
+                                <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-gif"/></svg>
+                                GIF
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-secondary" onclick="cancelUpload()">Cancelar</button>
+                <button class="btn-primary" onclick="saveContent()">Guardar Contenido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="modal" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeModal()">
                 <svg class="icon"><use href="#icon-close"/></svg>
@@ -1072,7 +585,7 @@
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN FIREBASE ====================
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyCd-lrexln3n2J9N2VhJDypVirFDgAM0ik",
             authDomain: "studio-9954918589-b3de7.firebaseapp.com",
@@ -1082,7 +595,7 @@
             appId: "1:137762705606:web:3841d220be8ba864c247c7"
         };
 
-        // ==================== CONFIGURACIÓN CLOUDINARY ====================
+        // Cloudinary Config
         const CLOUDINARY_CONFIG = {
             cloudName: "dgy5bftjt",
             apiKey: "665486787373332",
@@ -1092,14 +605,8 @@
 
         const ADMIN_EMAIL = "westfaldleandro@gmail.com";
 
-        // Initialize Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            console.log("Firebase inicializado correctamente");
-        } catch (error) {
-            console.error("Error inicializando Firebase:", error);
-        }
-
+        // Initialize
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
 
@@ -1108,58 +615,29 @@
         let currentOrigin = 'real';
         let currentType = 'all';
         let searchTerm = '';
+        let pendingUpload = null; // Almacena datos de upload pendiente
 
-        // ==================== AUTENTICACIÓN ====================
-
+        // Auth Functions
         function toggleLogin() {
-            const checkbox = document.getElementById('ageConfirm');
-            const btn = document.getElementById('googleBtn');
-            btn.disabled = !checkbox.checked;
+            document.getElementById('googleBtn').disabled = !document.getElementById('ageConfirm').checked;
         }
 
         function loginWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
-            
-            auth.signInWithPopup(provider)
-                .catch((error) => {
-                    console.error("Error de login:", error);
-                    showError(getErrorMessage(error.code));
-                });
+            auth.signInWithPopup(provider).catch((error) => {
+                document.getElementById('errorMsg').textContent = error.message;
+                document.getElementById('errorMsg').style.display = 'block';
+            });
         }
 
-        function logout() {
-            auth.signOut();
-        }
+        function logout() { auth.signOut(); }
 
-        function showError(msg) {
-            const errorEl = document.getElementById('errorMsg');
-            errorEl.textContent = msg;
-            errorEl.style.display = 'block';
-            setTimeout(() => errorEl.style.display = 'none', 5000);
-        }
-
-        function getErrorMessage(code) {
-            const messages = {
-                'auth/popup-closed-by-user': 'Ventana cerrada. Intenta de nuevo.',
-                'auth/cancelled-popup-request': 'Operación cancelada.',
-                'auth/account-exists-with-different-credential': 'Cuenta existente con otro método.',
-                'auth/unauthorized-domain': 'Dominio no autorizado.',
-                'auth/operation-not-allowed': 'Google Sign-In no habilitado en Firebase.',
-                'auth/configuration-not-found': 'Configuración incorrecta.',
-                'auth/invalid-api-key': 'API Key inválida.'
-            };
-            return messages[code] || 'Error de autenticación';
-        }
-
-        // Auth State Listener
         auth.onAuthStateChanged((user) => {
             if (user) {
                 currentUser = user;
-                // Verificación estricta del admin
                 isAdmin = user.email === ADMIN_EMAIL;
-                console.log("Usuario:", user.email, "Admin:", isAdmin);
-                showMainApp(user);
+                updateUI(user);
                 loadContent();
             } else {
                 showLogin();
@@ -1169,171 +647,153 @@
         function showLogin() {
             document.getElementById('loginOverlay').classList.remove('hidden');
             document.getElementById('mainApp').classList.add('hidden');
-            document.getElementById('ageConfirm').checked = false;
-            document.getElementById('googleBtn').disabled = true;
         }
 
-        function showMainApp(user) {
+        function updateUI(user) {
             document.getElementById('loginOverlay').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
             
             document.getElementById('userName').childNodes[0].textContent = user.displayName || 'Usuario';
             document.getElementById('userEmail').textContent = user.email;
             
-            const avatarEl = document.getElementById('userAvatar');
+            const avatar = document.getElementById('userAvatar');
             if (user.photoURL) {
-                avatarEl.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
-            } else {
-                avatarEl.innerHTML = `<svg class="icon" style="width: 24px; height: 24px;"><use href="#icon-user"/></svg>`;
+                avatar.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
             }
 
-            // Mostrar controles de admin SOLO si es el admin
             if (isAdmin) {
                 document.getElementById('adminBadge').classList.remove('hidden');
                 document.getElementById('adminPanel').classList.add('active');
-            } else {
-                document.getElementById('adminBadge').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('active');
             }
         }
 
-        // ==================== CLOUDINARY UPLOAD (SOLO ADMIN) ====================
-
+        // Upload Functions
         function openUploadWidget() {
-            if (!isAdmin) {
-                alert('Solo el administrador puede subir contenido');
-                return;
-            }
+            if (!isAdmin) return;
 
             const widget = cloudinary.createUploadWidget({
                 cloudName: CLOUDINARY_CONFIG.cloudName,
                 apiKey: CLOUDINARY_CONFIG.apiKey,
                 uploadPreset: CLOUDINARY_CONFIG.uploadPreset,
                 folder: CLOUDINARY_CONFIG.folder,
-                sources: ['local', 'url', 'camera'],
-                multiple: true,
-                maxFiles: 10,
-                maxFileSize: 50000000,
+                sources: ['local', 'url'],
+                multiple: false,
+                maxFileSize: 100000000, // 100MB
                 resourceType: 'auto',
-                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm'],
-                showAdvancedOptions: true,
+                clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm', 'avi'],
+                showAdvancedOptions: false,
                 cropping: false,
                 showPoweredBy: false,
                 styles: {
                     palette: {
-                        window: "#1a0b14",
-                        windowBorder: "#c41e3a",
-                        tabIcon: "#ff6b6b",
-                        menuIcons: "#ff6b6b",
-                        textDark: "#ffffff",
-                        textLight: "#ffffff",
-                        link: "#ff6b6b",
-                        action: "#c41e3a",
-                        inactiveTabIcon: "#666666",
-                        error: "#ff0000",
-                        inProgress: "#c41e3a",
-                        complete: "#4ade80",
+                        window: "#1a0b14", windowBorder: "#c41e3a",
+                        tabIcon: "#ff6b6b", menuIcons: "#ff6b6b",
+                        textDark: "#ffffff", textLight: "#ffffff",
+                        link: "#ff6b6b", action: "#c41e3a",
+                        inactiveTabIcon: "#666666", error: "#ff0000",
+                        inProgress: "#c41e3a", complete: "#4ade80",
                         sourceBg: "#0d0208"
                     }
                 }
             }, (error, result) => {
                 if (error) {
-                    console.error('Upload error:', error);
+                    console.error('Error:', error);
                     return;
                 }
                 
                 if (result.event === 'success') {
-                    saveToFirebase(result.info);
+                    console.log('Upload exitoso:', result.info);
+                    showMetadataForm(result.info);
                 }
             });
 
             widget.open();
         }
 
-        function saveToFirebase(uploadInfo) {
+        function showMetadataForm(uploadInfo) {
+            pendingUpload = uploadInfo;
+            
+            // Mostrar preview
+            const previewContainer = document.getElementById('previewContainer');
+            const isVideo = uploadInfo.resource_type === 'video';
+            
+            if (isVideo) {
+                previewContainer.innerHTML = `
+                    <video controls style="max-width: 100%; max-height: 100%;">
+                        <source src="${uploadInfo.secure_url}" type="video/${uploadInfo.format}">
+                    </video>
+                `;
+                // Auto-seleccionar video
+                document.getElementById('catVideo').checked = true;
+            } else if (uploadInfo.format === 'gif') {
+                previewContainer.innerHTML = `<img src="${uploadInfo.secure_url}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                document.getElementById('catGif').checked = true;
+            } else {
+                previewContainer.innerHTML = `<img src="${uploadInfo.secure_url}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                document.getElementById('catImage').checked = true;
+            }
+
+            // Setear título por defecto
+            document.getElementById('contentTitle').value = uploadInfo.original_filename || 'Sin título';
+            
+            // Mostrar modal
+            document.getElementById('metadataModal').classList.add('active');
+        }
+
+        function cancelUpload() {
+            pendingUpload = null;
+            document.getElementById('metadataModal').classList.remove('active');
+        }
+
+        function saveContent() {
+            if (!pendingUpload) return;
+
+            const title = document.getElementById('contentTitle').value || 'Sin título';
+            const origin = document.querySelector('input[name="origin"]:checked').value;
+            const category = document.querySelector('input[name="category"]:checked').value;
+            
             const contentRef = database.ref('content').push();
             
             const contentData = {
                 id: contentRef.key,
-                title: uploadInfo.original_filename || 'Sin título',
-                type: getContentType(uploadInfo.resource_type, uploadInfo.format),
-                origin: 'real',
-                url: uploadInfo.secure_url,
-                thumbnailUrl: uploadInfo.thumbnail_url || uploadInfo.secure_url,
-                publicId: uploadInfo.public_id,
+                title: title,
+                type: category,
+                origin: origin,
+                url: pendingUpload.secure_url,
+                thumbnailUrl: pendingUpload.thumbnail_url || pendingUpload.secure_url,
+                publicId: pendingUpload.public_id,
                 author: currentUser.displayName || 'Admin',
                 authorId: currentUser.uid,
-                quality: uploadInfo.width >= 1920 ? '4K' : uploadInfo.width >= 1280 ? 'HD' : 'SD',
+                quality: pendingUpload.width >= 1920 ? '4K' : pendingUpload.width >= 1280 ? 'HD' : 'SD',
                 createdAt: firebase.database.ServerValue.TIMESTAMP,
                 cloudinaryData: {
-                    width: uploadInfo.width,
-                    height: uploadInfo.height,
-                    format: uploadInfo.format,
-                    bytes: uploadInfo.bytes,
-                    duration: uploadInfo.duration || null
+                    width: pendingUpload.width,
+                    height: pendingUpload.height,
+                    format: pendingUpload.format,
+                    bytes: pendingUpload.bytes,
+                    duration: pendingUpload.duration || null,
+                    resourceType: pendingUpload.resource_type
                 }
             };
 
             contentRef.set(contentData)
                 .then(() => {
-                    console.log('Guardado en Firebase');
+                    console.log('Guardado exitoso');
+                    document.getElementById('metadataModal').classList.remove('active');
+                    pendingUpload = null;
                     loadContent();
                 })
                 .catch((error) => {
-                    console.error('Error guardando:', error);
                     alert('Error al guardar: ' + error.message);
                 });
         }
 
-        function getContentType(resourceType, format) {
-            if (resourceType === 'video') return 'video';
-            if (format === 'gif') return 'gif';
-            return 'image';
-        }
-
-        // ==================== ELIMINAR CONTENIDO (SOLO ADMIN) ====================
-
-        function deleteContent(id, event) {
-            event.stopPropagation();
-            
-            if (!isAdmin) {
-                alert('No tienes permisos para eliminar contenido');
-                return;
-            }
-
-            if (!confirm('¿Estás seguro de eliminar este contenido permanentemente?')) {
-                return;
-            }
-
-            const item = contentData.find(i => i.id === id);
-            if (!item) return;
-
-            // Eliminar de Firebase
-            database.ref('content/' + id).remove()
-                .then(() => {
-                    console.log('Eliminado de Firebase');
-                    // Opcional: Eliminar de Cloudinary también (requiere backend)
-                })
-                .catch((error) => {
-                    console.error('Error eliminando:', error);
-                    alert('Error al eliminar: ' + error.message);
-                });
-        }
-
-        // ==================== CONTENT MANAGEMENT ====================
-
+        // Content Management
         function loadContent() {
             database.ref('content').orderByChild('createdAt').on('value', (snapshot) => {
                 const data = snapshot.val();
-                if (data) {
-                    contentData = Object.values(data).reverse();
-                    renderContent();
-                } else {
-                    contentData = [];
-                    renderContent();
-                }
-            }, (error) => {
-                console.error('Error cargando datos:', error);
+                contentData = data ? Object.values(data).reverse() : [];
+                renderContent();
             });
         }
 
@@ -1379,6 +839,7 @@
                 return matchOrigin && matchType && matchSearch;
             });
 
+            // Update stats
             document.getElementById('total-count').textContent = filtered.length;
             document.getElementById('images-count').textContent = filtered.filter(i => i.type === 'image').length;
             document.getElementById('videos-count').textContent = filtered.filter(i => i.type === 'video').length;
@@ -1388,10 +849,8 @@
                 grid.innerHTML = `
                     <div class="empty-state">
                         <svg class="icon icon-large" style="opacity: 0.4;"><use href="#icon-image"/></svg>
-                        <h3>No hay contenido aún</h3>
-                        <p style="margin-top: 10px; font-size: 14px;">
-                            ${isAdmin ? 'Usa el panel de admin para subir contenido' : 'Vuelve pronto para ver nuevo contenido'}
-                        </p>
+                        <h3>No hay contenido</h3>
+                        <p>${isAdmin ? 'Sube contenido desde el panel de admin' : 'No hay contenido disponible'}</p>
                     </div>
                 `;
                 return;
@@ -1403,10 +862,12 @@
                         <svg class="icon" style="width: 18px; height: 18px;"><use href="#icon-delete"/></svg>
                     </button>` : ''}
                     <span class="quality-badge">${item.quality || 'HD'}</span>
-                    <img src="${item.thumbnailUrl || item.url}" alt="${item.title}" loading="lazy">
+                    ${item.type === 'video' ? 
+                        `<video src="${item.url}" preload="metadata" muted style="width: 100%; height: 100%; object-fit: cover;"></video>` :
+                        `<img src="${item.thumbnailUrl || item.url}" alt="${item.title}" loading="lazy">`
+                    }
                     <span class="content-type-badge ${item.type}">
-                        ${getTypeIcon(item.type)}
-                        ${item.type}
+                        ${getIcon(item.type)} ${item.type}
                     </span>
                     ${item.type === 'video' ? `<div class="play-icon"><svg class="icon" style="width: 32px; height: 32px; fill: white;"><use href="#icon-play"/></svg></div>` : ''}
                     <div class="content-overlay">
@@ -1420,7 +881,7 @@
             `).join('');
         }
 
-        function getTypeIcon(type) {
+        function getIcon(type) {
             const icons = {
                 image: '<svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-image"/></svg>',
                 video: '<svg class="icon" style="width: 14px; height: 14px;"><use href="#icon-video"/></svg>',
@@ -1429,23 +890,31 @@
             return icons[type] || '';
         }
 
+        function deleteContent(id, event) {
+            event.stopPropagation();
+            if (!isAdmin || !confirm('¿Eliminar permanentemente?')) return;
+            
+            database.ref('content/' + id).remove()
+                .catch((error) => alert('Error: ' + error.message));
+        }
+
         function openModal(id) {
             const item = contentData.find(i => i.id === id);
             if (!item) return;
 
-            const modal = document.getElementById('modal');
+            const modal = document.getElementById('viewModal');
             const mediaContainer = document.getElementById('modalMedia');
             
             if (item.type === 'video') {
                 mediaContainer.innerHTML = `
-                    <video controls autoplay style="max-width: 100%; max-height: 85vh; border-radius: 16px;">
+                    <video controls autoplay style="max-width: 90vw; max-height: 85vh; border-radius: 16px;">
                         <source src="${item.url}" type="video/${item.cloudinaryData?.format || 'mp4'}">
-                        Tu navegador no soporta videos.
+                        Tu navegador no soporta este video.
                     </video>
                 `;
             } else {
                 mediaContainer.innerHTML = `
-                    <img src="${item.url}" alt="${item.title}" style="max-width: 100%; max-height: 85vh; border-radius: 16px;">
+                    <img src="${item.url}" alt="${item.title}" style="max-width: 90vw; max-height: 85vh; border-radius: 16px;">
                 `;
             }
             
@@ -1454,10 +923,8 @@
         }
 
         function closeModal() {
-            const modal = document.getElementById('modal');
-            const mediaContainer = document.getElementById('modalMedia');
-            modal.classList.remove('active');
-            mediaContainer.innerHTML = '';
+            document.getElementById('viewModal').classList.remove('active');
+            document.getElementById('modalMedia').innerHTML = '';
             document.body.style.overflow = '';
         }
 
