@@ -11,6 +11,13 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        :root {
+            --grid-columns: 3;
+            --card-aspect: 3/4;
+            --theme-primary: #c41e3a;
+            --theme-secondary: #8b0046;
+        }
+
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #0d0208;
@@ -19,7 +26,7 @@
             padding: 20px;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1600px; margin: 0 auto; }
 
         /* SVG Icons */
         .icon { width: 20px; height: 20px; fill: currentColor; }
@@ -67,7 +74,6 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px;
         }
         .btn-google:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-google:hover:not(:disabled) { transform: translateY(-2px); }
 
         .error-msg {
             color: #ff6b6b; font-size: 13px; margin-top: 15px; display: none;
@@ -99,6 +105,21 @@
             font-size: 10px; font-weight: 800; text-transform: uppercase;
         }
 
+        .user-actions { display: flex; gap: 10px; }
+
+        .btn-icon {
+            padding: 10px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,100,120,0.2);
+            border-radius: 12px; color: #aaa;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s;
+        }
+        .btn-icon:hover {
+            background: rgba(220, 20, 60, 0.2);
+            border-color: rgba(220, 20, 60, 0.5);
+            color: #fff;
+        }
+
         .btn-logout {
             padding: 10px 20px; background: rgba(220, 20, 60, 0.1);
             border: 1px solid rgba(220, 20, 60, 0.3);
@@ -123,82 +144,100 @@
         }
         .btn-upload { background: linear-gradient(135deg, #c41e3a, #8b0046); color: white; }
         .btn-upload:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(196, 30, 58, 0.4); }
+        .btn-config { background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); color: #ffc107; }
 
-        /* Metadata Form Modal */
-        .metadata-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             display: none; align-items: center; justify-content: center;
             z-index: 3000; padding: 20px;
         }
-        .metadata-modal.active { display: flex; }
+        .settings-modal.active { display: flex; }
         
-        .metadata-form {
+        .settings-panel {
             background: linear-gradient(145deg, #1a0b14, #0f0510);
             border: 1px solid rgba(220, 20, 60, 0.3);
-            border-radius: 24px; padding: 40px; max-width: 500px; width: 100%;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.9);
+            border-radius: 24px; padding: 40px; max-width: 700px; width: 100%;
+            max-height: 90vh; overflow-y: auto;
         }
-        .metadata-form h3 {
-            margin-bottom: 25px; color: #ff6b6b;
-            display: flex; align-items: center; gap: 10px;
-        }
-        
-        .preview-container {
-            width: 100%; height: 200px; border-radius: 12px;
-            overflow: hidden; margin-bottom: 20px;
-            background: #000; display: flex; align-items: center; justify-content: center;
-        }
-        .preview-container img, .preview-container video {
-            max-width: 100%; max-height: 100%; object-fit: contain;
+        .settings-panel h2 {
+            margin-bottom: 30px; color: #ff6b6b;
+            display: flex; align-items: center; gap: 12px;
         }
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label {
-            display: block; margin-bottom: 8px; font-size: 13px;
-            color: #aaa; text-transform: uppercase; letter-spacing: 1px;
+        .settings-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255,100,120,0.1);
         }
-        .form-group input, .form-group select {
+        .settings-section:last-child { border-bottom: none; }
+        .settings-section h4 {
+            margin-bottom: 20px; color: #fff;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+        }
+        .setting-item label {
+            display: block; margin-bottom: 10px;
+            font-size: 14px; color: #aaa;
+        }
+
+        .range-slider {
+            display: flex; align-items: center; gap: 15px;
+        }
+        .range-slider input[type="range"] {
+            flex: 1; height: 6px; background: rgba(255,100,120,0.2);
+            border-radius: 3px; outline: none; -webkit-appearance: none;
+        }
+        .range-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 20px; height: 20px;
+            background: linear-gradient(135deg, #c41e3a, #8b0046);
+            border-radius: 50%; cursor: pointer;
+        }
+        .range-value {
+            min-width: 40px; text-align: center;
+            padding: 8px 12px; background: rgba(255,100,120,0.1);
+            border-radius: 8px; font-weight: 600; color: #ff6b6b;
+        }
+
+        .toggle-switch {
+            display: flex; align-items: center; gap: 15px;
+        }
+        .switch {
+            position: relative; width: 60px; height: 30px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background-color: rgba(255,100,120,0.2);
+            transition: .4s; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 22px; width: 22px;
+            left: 4px; bottom: 4px; background-color: white;
+            transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #c41e3a; }
+        input:checked + .slider:before { transform: translateX(30px); }
+
+        .grid-preview {
+            display: grid; gap: 10px; margin-top: 15px;
+            padding: 20px; background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+        }
+        .grid-preview-item {
+            background: rgba(220, 20, 60, 0.3);
+            border-radius: 8px; height: 60px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: #ff6b6b;
+        }
+
+        .select-styled {
             width: 100%; padding: 14px; border: 1px solid rgba(255,100,120,0.2);
             background: rgba(0,0,0,0.4); border-radius: 12px; color: #fff;
-            font-size: 15px; outline: none;
-        }
-        .form-group input:focus, .form-group select:focus {
-            border-color: rgba(220, 20, 60, 0.5);
-            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
-        }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-        .radio-group {
-            display: flex; gap: 15px; flex-wrap: wrap;
-        }
-        .radio-option {
-            flex: 1; min-width: 120px;
-        }
-        .radio-option input { display: none; }
-        .radio-option label {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 12px; border: 2px solid rgba(255,100,120,0.2);
-            border-radius: 12px; cursor: pointer; text-align: center;
-            transition: all 0.3s;
-        }
-        .radio-option input:checked + label {
-            border-color: #c41e3a; background: rgba(196, 30, 58, 0.2);
-            color: #fff;
-        }
-
-        .form-actions {
-            display: flex; gap: 15px; margin-top: 25px;
-        }
-        .btn-primary {
-            flex: 1; padding: 14px; background: linear-gradient(135deg, #c41e3a, #8b0046);
-            border: none; border-radius: 12px; color: white;
-            font-size: 16px; font-weight: 600; cursor: pointer;
-        }
-        .btn-secondary {
-            flex: 1; padding: 14px; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,100,120,0.3); border-radius: 12px;
-            color: #aaa; font-size: 16px; cursor: pointer;
+            font-size: 15px; outline: none; cursor: pointer;
         }
 
         .hidden { display: none !important; }
@@ -276,13 +315,21 @@
         }
         .stat-value { font-weight: 700; color: #dc143c; font-size: 12px; }
 
+        /* Grid dinámico según configuración */
         .content-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            display: grid;
+            grid-template-columns: repeat(var(--grid-columns, 3), 1fr);
             gap: 25px;
         }
 
+        /* Ajustes responsive automáticos */
+        @media (max-width: 1200px) { .content-grid { --grid-columns: 3; } }
+        @media (max-width: 900px) { .content-grid { --grid-columns: 2; } }
+        @media (max-width: 600px) { .content-grid { --grid-columns: 2; gap: 15px; } }
+
         .content-item {
-            aspect-ratio: 3/4; background: linear-gradient(145deg, #1f0f18, #150810);
+            aspect-ratio: var(--card-aspect, 3/4);
+            background: linear-gradient(145deg, #1f0f18, #150810);
             border-radius: 20px; overflow: hidden; position: relative;
             cursor: pointer; transition: all 0.5s;
             border: 1px solid rgba(255,100,120,0.08);
@@ -292,10 +339,22 @@
             box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(220, 20, 60, 0.15);
         }
 
+        /* IMÁGENES NÍTIDAS - Sin compresión de Cloudinary */
         .content-item img, .content-item video {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%; height: 100%;
+            object-fit: cover;
             transition: transform 0.6s;
+            /* Forzar calidad máxima */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
+        
+        /* Para videos: mostrar preview nítido */
+        .content-item video {
+            object-fit: cover;
+            background: #000;
+        }
+
         .content-item:hover img, .content-item:hover video { transform: scale(1.08); }
 
         .content-overlay {
@@ -349,18 +408,92 @@
 
         .empty-state { text-align: center; padding: 80px 20px; color: #666; grid-column: 1 / -1; }
 
-        /* Modal */
+        /* Metadata Modal */
+        .metadata-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: none; align-items: center; justify-content: center;
+            z-index: 3000; padding: 20px;
+        }
+        .metadata-modal.active { display: flex; }
+        
+        .metadata-form {
+            background: linear-gradient(145deg, #1a0b14, #0f0510);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            border-radius: 24px; padding: 40px; max-width: 500px; width: 100%;
+        }
+        .metadata-form h3 { margin-bottom: 25px; color: #ff6b6b; display: flex; align-items: center; gap: 10px; }
+        
+        .preview-container {
+            width: 100%; height: 200px; border-radius: 12px;
+            overflow: hidden; margin-bottom: 20px;
+            background: #000; display: flex; align-items: center; justify-content: center;
+        }
+        .preview-container img, .preview-container video {
+            max-width: 100%; max-height: 100%; object-fit: contain;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block; margin-bottom: 8px;
+            font-size: 13px; color: #aaa; text-transform: uppercase;
+        }
+        .form-group input, .form-group select {
+            width: 100%; padding: 14px;
+            border: 1px solid rgba(255,100,120,0.2);
+            background: rgba(0,0,0,0.4); border-radius: 12px;
+            color: #fff; font-size: 15px; outline: none;
+        }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .radio-group { display: flex; gap: 15px; flex-wrap: wrap; }
+        .radio-option { flex: 1; min-width: 100px; }
+        .radio-option input { display: none; }
+        .radio-option label {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 12px; border: 2px solid rgba(255,100,120,0.2);
+            border-radius: 12px; cursor: pointer; transition: all 0.3s;
+        }
+        .radio-option input:checked + label {
+            border-color: #c41e3a; background: rgba(196, 30, 58, 0.2);
+        }
+
+        .form-actions { display: flex; gap: 15px; margin-top: 25px; }
+        .btn-primary {
+            flex: 1; padding: 14px;
+            background: linear-gradient(135deg, #c41e3a, #8b0046);
+            border: none; border-radius: 12px; color: white;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+        .btn-secondary {
+            flex: 1; padding: 14px; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,100,120,0.3);
+            border-radius: 12px; color: #aaa; font-size: 16px; cursor: pointer;
+        }
+
+        /* View Modal */
         .modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             display: none; align-items: center; justify-content: center;
             z-index: 2000; padding: 20px;
         }
         .modal.active { display: flex; }
-        .modal-content { max-width: 90vw; max-height: 90vh; position: relative; }
-        .modal-content img, .modal-content video {
-            max-width: 90vw; max-height: 85vh;
-            border-radius: 16px; box-shadow: 0 25px 80px rgba(0,0,0,0.8);
+        .modal-content { max-width: 95vw; max-height: 95vh; position: relative; }
+        
+        /* Imagen en modal: calidad máxima */
+        .modal-content img {
+            max-width: 95vw; max-height: 90vh;
+            border-radius: 16px;
+            object-fit: contain;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
         }
+        
+        .modal-content video {
+            max-width: 95vw; max-height: 90vh;
+            border-radius: 16px;
+        }
+        
         .modal-close {
             position: absolute; top: -50px; right: 0;
             background: rgba(255,255,255,0.1); border: none;
@@ -369,7 +502,7 @@
         }
 
         @media (max-width: 768px) {
-            .content-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .settings-panel { padding: 25px; }
             .form-row { grid-template-columns: 1fr; }
         }
     </style>
@@ -387,7 +520,7 @@
             </symbol>
             <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
             <symbol id="icon-upload" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></symbol>
-            <symbol id="icon-manage" viewBox="0 0 24 24"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></symbol>
+            <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
             <symbol id="icon-lock" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></symbol>
             <symbol id="icon-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
             <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></symbol>
@@ -398,7 +531,9 @@
             <symbol id="icon-delete" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></symbol>
             <symbol id="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
             <symbol id="icon-user" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></symbol>
-            <symbol id="icon-settings" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L3.16 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
+            <symbol id="icon-grid" viewBox="0 0 24 24"><path d="M3 3v8h8V3H3zm6 6H5V5h4v4zm-6 4v8h8v-8H3zm6 6H5v-4h4v4zm4-16v8h8V3h-8zm6 6h-4V5h4v4zm-6 4v8h8v-8h-8zm6 6h-4v-4h4v4z"/></symbol>
+            <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></symbol>
+            <symbol id="icon-sort" viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></symbol>
         </defs>
     </svg>
 
@@ -407,22 +542,16 @@
         <div class="login-box">
             <h1><svg class="icon icon-large"><use href="#icon-adult"/></svg> Acceso Exclusivo</h1>
             <p style="color: #666; margin-bottom: 20px;">Contenido para adultos mayores de 18 años</p>
-            
             <div class="age-warning">
                 <strong>+18</strong>
                 Este sitio contiene material para adultos exclusivamente.
             </div>
-
             <div class="checkbox-group">
                 <input type="checkbox" id="ageConfirm" onchange="toggleLogin()">
-                <label for="ageConfirm">
-                    Confirmo que soy mayor de <strong>18 años</strong> y acepto ver contenido para adultos.
-                </label>
+                <label for="ageConfirm">Confirmo que soy mayor de <strong>18 años</strong>.</label>
             </div>
-
             <button class="btn-google" id="googleBtn" onclick="loginWithGoogle()" disabled>
-                <svg class="icon"><use href="#icon-google"/></svg>
-                Continuar con Google
+                <svg class="icon"><use href="#icon-google"/></svg> Continuar con Google
             </button>
             <p id="errorMsg" class="error-msg"></p>
         </div>
@@ -442,20 +571,26 @@
                         <span id="userEmail">email@example.com</span>
                     </div>
                 </div>
-                <button class="btn-logout" onclick="logout()">
-                    <svg class="icon"><use href="#icon-logout"/></svg>
-                    Cerrar Sesión
-                </button>
+                <div class="user-actions">
+                    <button id="settingsBtn" class="btn-icon hidden" onclick="openSettings()">
+                        <svg class="icon"><use href="#icon-settings"/></svg>
+                        <span>Configuración</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">
+                        <svg class="icon"><use href="#icon-logout"/></svg> Salir
+                    </button>
+                </div>
             </div>
 
             <!-- Admin Panel -->
             <div id="adminPanel" class="admin-panel">
                 <h3><svg class="icon"><use href="#icon-settings"/></svg> Panel de Administrador</h3>
-                <p style="color: #aaa; margin-bottom: 20px;">Sube contenido y gestiona la galería</p>
                 <div class="admin-actions">
                     <button class="btn-admin btn-upload" onclick="openUploadWidget()">
-                        <svg class="icon"><use href="#icon-upload"/></svg>
-                        Subir Nuevo Contenido
+                        <svg class="icon"><use href="#icon-upload"/></svg> Subir Contenido
+                    </button>
+                    <button class="btn-admin btn-config" onclick="openSettings()">
+                        <svg class="icon"><use href="#icon-grid"/></svg> Configurar Vista
                     </button>
                 </div>
             </div>
@@ -501,32 +636,118 @@
                     <div class="stat"><span>GIFs:</span><span class="stat-value" id="gifs-count">0</span></div>
                 </div>
 
-                <div class="content-grid" id="contentGrid">
-                    <div class="loading-skeleton"></div>
-                    <div class="loading-skeleton"></div>
-                    <div class="loading-skeleton"></div>
-                </div>
+                <div class="content-grid" id="contentGrid"></div>
             </div>
         </div>
     </div>
 
-    <!-- Metadata Form Modal -->
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="settings-modal">
+        <div class="settings-panel">
+            <h2><svg class="icon"><use href="#icon-settings"/></svg> Configuración de la Galería</h2>
+
+            <!-- Grid Columns -->
+            <div class="settings-section">
+                <h4><svg class="icon"><use href="#icon-grid"/></svg> Diseño de Cuadrícula</h4>
+                <div class="setting-item">
+                    <label>Número de columnas: <span id="columnsValue">3</span></label>
+                    <div class="range-slider">
+                        <input type="range" id="gridColumns" min="1" max="6" value="3" oninput="updateColumns(this.value)">
+                        <span class="range-value">3</span>
+                    </div>
+                    <div class="grid-preview" id="gridPreview" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="grid-preview-item">1</div>
+                        <div class="grid-preview-item">2</div>
+                        <div class="grid-preview-item">3</div>
+                        <div class="grid-preview-item">4</div>
+                        <div class="grid-preview-item">5</div>
+                        <div class="grid-preview-item">6</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Aspect Ratio -->
+            <div class="settings-section">
+                <h4><svg class="icon"><use href="#icon-image"/></svg> Proporción de Tarjetas</h4>
+                <div class="setting-item">
+                    <label>Formato de las imágenes</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="aspect" id="aspect34" value="3/4" checked onchange="updateAspect(this.value)">
+                            <label for="aspect34">3:4 Vertical</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="aspect" id="aspect11" value="1/1" onchange="updateAspect(this.value)">
+                            <label for="aspect11">1:1 Cuadrado</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="aspect" id="aspect169" value="16/9" onchange="updateAspect(this.value)">
+                            <label for="aspect169">16:9 Horizontal</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="aspect" id="aspect23" value="2/3" onchange="updateAspect(this.value)">
+                            <label for="aspect23">2:3 Retrato</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quality Settings -->
+            <div class="settings-section">
+                <h4><svg class="icon"><use href="#icon-eye"/></svg> Calidad de Visualización</h4>
+                <div class="setting-item">
+                    <div class="toggle-switch">
+                        <label class="switch">
+                            <input type="checkbox" id="highQuality" checked onchange="toggleQuality()">
+                            <span class="slider"></span>
+                        </label>
+                        <span>Alta calidad de imágenes (recomendado)</span>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="toggle-switch">
+                        <label class="switch">
+                            <input type="checkbox" id="lazyLoad" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span>Carga progresiva (mejor rendimiento)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sort Options -->
+            <div class="settings-section">
+                <h4><svg class="icon"><use href="#icon-sort"/></svg> Ordenamiento</h4>
+                <div class="setting-item">
+                    <label>Ordenar contenido por</label>
+                    <select class="select-styled" id="sortOrder" onchange="updateSort(this.value)">
+                        <option value="newest">Más reciente primero</option>
+                        <option value="oldest">Más antiguo primero</option>
+                        <option value="title">Título (A-Z)</option>
+                        <option value="quality">Calidad (4K a SD)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-secondary" onclick="closeSettings()">Cancelar</button>
+                <button class="btn-primary" onclick="saveSettings()">Aplicar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Metadata Modal -->
     <div id="metadataModal" class="metadata-modal">
         <div class="metadata-form">
             <h3><svg class="icon"><use href="#icon-settings"/></svg> Configurar Contenido</h3>
-            
-            <div class="preview-container" id="previewContainer">
-                <!-- Preview se carga aquí -->
-            </div>
-
+            <div class="preview-container" id="previewContainer"></div>
             <div class="form-group">
-                <label>Título del contenido</label>
-                <input type="text" id="contentTitle" placeholder="Ej: Sesión fotográfica de verano">
+                <label>Título</label>
+                <input type="text" id="contentTitle" placeholder="Ej: Sesión de fotos">
             </div>
-
             <div class="form-row">
                 <div class="form-group">
-                    <label>Tipo de origen</label>
+                    <label>Origen</label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" name="origin" id="originReal" value="real" checked>
@@ -538,38 +759,27 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label>Categoría</label>
+                    <label>Tipo</label>
                     <div class="radio-group">
                         <div class="radio-option">
                             <input type="radio" name="category" id="catImage" value="image" checked>
-                            <label for="catImage">
-                                <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-image"/></svg>
-                                Foto
-                            </label>
+                            <label for="catImage"><svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-image"/></svg> Foto</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" name="category" id="catVideo" value="video">
-                            <label for="catVideo">
-                                <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-video"/></svg>
-                                Video
-                            </label>
+                            <label for="catVideo"><svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-video"/></svg> Video</label>
                         </div>
                         <div class="radio-option">
                             <input type="radio" name="category" id="catGif" value="gif">
-                            <label for="catGif">
-                                <svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-gif"/></svg>
-                                GIF
-                            </label>
+                            <label for="catGif"><svg class="icon" style="width: 16px; height: 16px;"><use href="#icon-gif"/></svg> GIF</label>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="form-actions">
                 <button class="btn-secondary" onclick="cancelUpload()">Cancelar</button>
-                <button class="btn-primary" onclick="saveContent()">Guardar Contenido</button>
+                <button class="btn-primary" onclick="saveContent()">Guardar</button>
             </div>
         </div>
     </div>
@@ -595,7 +805,6 @@
             appId: "1:137762705606:web:3841d220be8ba864c247c7"
         };
 
-        // Cloudinary Config
         const CLOUDINARY_CONFIG = {
             cloudName: "dgy5bftjt",
             apiKey: "665486787373332",
@@ -605,7 +814,6 @@
 
         const ADMIN_EMAIL = "westfaldleandro@gmail.com";
 
-        // Initialize
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const database = firebase.database();
@@ -615,7 +823,13 @@
         let currentOrigin = 'real';
         let currentType = 'all';
         let searchTerm = '';
-        let pendingUpload = null; // Almacena datos de upload pendiente
+        let pendingUpload = null;
+        let appSettings = {
+            columns: 3,
+            aspectRatio: '3/4',
+            highQuality: true,
+            sortOrder: 'newest'
+        };
 
         // Auth Functions
         function toggleLogin() {
@@ -638,6 +852,7 @@
                 currentUser = user;
                 isAdmin = user.email === ADMIN_EMAIL;
                 updateUI(user);
+                loadSettings();
                 loadContent();
             } else {
                 showLogin();
@@ -652,19 +867,79 @@
         function updateUI(user) {
             document.getElementById('loginOverlay').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            
             document.getElementById('userName').childNodes[0].textContent = user.displayName || 'Usuario';
             document.getElementById('userEmail').textContent = user.email;
             
             const avatar = document.getElementById('userAvatar');
-            if (user.photoURL) {
-                avatar.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
-            }
+            if (user.photoURL) avatar.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
 
             if (isAdmin) {
                 document.getElementById('adminBadge').classList.remove('hidden');
                 document.getElementById('adminPanel').classList.add('active');
+                document.getElementById('settingsBtn').classList.remove('hidden');
             }
+        }
+
+        // Settings Functions
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        function updateColumns(val) {
+            document.querySelector('.range-value').textContent = val;
+            document.getElementById('columnsValue').textContent = val;
+            document.getElementById('gridPreview').style.gridTemplateColumns = `repeat(${val}, 1fr)`;
+            appSettings.columns = parseInt(val);
+        }
+
+        function updateAspect(val) {
+            appSettings.aspectRatio = val;
+            document.documentElement.style.setProperty('--card-aspect', val);
+        }
+
+        function toggleQuality() {
+            appSettings.highQuality = document.getElementById('highQuality').checked;
+        }
+
+        function updateSort(val) {
+            appSettings.sortOrder = val;
+        }
+
+        function saveSettings() {
+            // Guardar en localStorage para persistencia
+            localStorage.setItem('gallerySettings', JSON.stringify(appSettings));
+            
+            // Aplicar cambios
+            document.documentElement.style.setProperty('--grid-columns', appSettings.columns);
+            document.documentElement.style.setProperty('--card-aspect', appSettings.aspectRatio);
+            
+            closeSettings();
+            renderContent(); // Re-renderizar con nuevas configuraciones
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('gallerySettings');
+            if (saved) {
+                appSettings = JSON.parse(saved);
+                // Aplicar configuraciones guardadas
+                document.getElementById('gridColumns').value = appSettings.columns;
+                updateColumns(appSettings.columns);
+                
+                const aspectRadio = document.querySelector(`input[name="aspect"][value="${appSettings.aspectRatio}"]`);
+                if (aspectRadio) aspectRadio.checked = true;
+                updateAspect(appSettings.aspectRatio);
+                
+                document.getElementById('highQuality').checked = appSettings.highQuality;
+                document.getElementById('sortOrder').value = appSettings.sortOrder;
+            }
+            
+            // Aplicar CSS variables
+            document.documentElement.style.setProperty('--grid-columns', appSettings.columns);
+            document.documentElement.style.setProperty('--card-aspect', appSettings.aspectRatio);
         }
 
         // Upload Functions
@@ -678,12 +953,13 @@
                 folder: CLOUDINARY_CONFIG.folder,
                 sources: ['local', 'url'],
                 multiple: false,
-                maxFileSize: 100000000, // 100MB
+                maxFileSize: 100000000,
                 resourceType: 'auto',
                 clientAllowedFormats: ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'mov', 'webm', 'avi'],
                 showAdvancedOptions: false,
                 cropping: false,
                 showPoweredBy: false,
+                transformation: [{ quality: "auto:best" }], // Forzar mejor calidad en upload
                 styles: {
                     palette: {
                         window: "#1a0b14", windowBorder: "#c41e3a",
@@ -700,9 +976,7 @@
                     console.error('Error:', error);
                     return;
                 }
-                
                 if (result.event === 'success') {
-                    console.log('Upload exitoso:', result.info);
                     showMetadataForm(result.info);
                 }
             });
@@ -712,18 +986,11 @@
 
         function showMetadataForm(uploadInfo) {
             pendingUpload = uploadInfo;
-            
-            // Mostrar preview
             const previewContainer = document.getElementById('previewContainer');
             const isVideo = uploadInfo.resource_type === 'video';
             
             if (isVideo) {
-                previewContainer.innerHTML = `
-                    <video controls style="max-width: 100%; max-height: 100%;">
-                        <source src="${uploadInfo.secure_url}" type="video/${uploadInfo.format}">
-                    </video>
-                `;
-                // Auto-seleccionar video
+                previewContainer.innerHTML = `<video controls src="${uploadInfo.secure_url}" style="max-width: 100%; max-height: 100%;"></video>`;
                 document.getElementById('catVideo').checked = true;
             } else if (uploadInfo.format === 'gif') {
                 previewContainer.innerHTML = `<img src="${uploadInfo.secure_url}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
@@ -733,10 +1000,7 @@
                 document.getElementById('catImage').checked = true;
             }
 
-            // Setear título por defecto
             document.getElementById('contentTitle').value = uploadInfo.original_filename || 'Sin título';
-            
-            // Mostrar modal
             document.getElementById('metadataModal').classList.add('active');
         }
 
@@ -754,13 +1018,21 @@
             
             const contentRef = database.ref('content').push();
             
+            // URL de alta calidad SIN transformaciones de Cloudinary que reduzcan calidad
+            let highQualityUrl = pendingUpload.secure_url;
+            // Si es imagen, asegurar que no tenga parámetros de calidad baja
+            if (pendingUpload.resource_type === 'image' && !pendingUpload.format === 'gif') {
+                // Eliminar cualquier transformación existente y forzar calidad máxima
+                highQualityUrl = pendingUpload.secure_url.replace(/\/upload\/[^/]+\//, '/upload/q_auto:best/');
+            }
+
             const contentData = {
                 id: contentRef.key,
                 title: title,
                 type: category,
                 origin: origin,
-                url: pendingUpload.secure_url,
-                thumbnailUrl: pendingUpload.thumbnail_url || pendingUpload.secure_url,
+                url: highQualityUrl,
+                thumbnailUrl: pendingUpload.thumbnail_url || highQualityUrl,
                 publicId: pendingUpload.public_id,
                 author: currentUser.displayName || 'Admin',
                 authorId: currentUser.uid,
@@ -778,23 +1050,41 @@
 
             contentRef.set(contentData)
                 .then(() => {
-                    console.log('Guardado exitoso');
                     document.getElementById('metadataModal').classList.remove('active');
                     pendingUpload = null;
                     loadContent();
                 })
-                .catch((error) => {
-                    alert('Error al guardar: ' + error.message);
-                });
+                .catch((error) => alert('Error al guardar: ' + error.message));
         }
 
         // Content Management
         function loadContent() {
-            database.ref('content').orderByChild('createdAt').on('value', (snapshot) => {
+            database.ref('content').on('value', (snapshot) => {
                 const data = snapshot.val();
-                contentData = data ? Object.values(data).reverse() : [];
+                contentData = data ? Object.values(data) : [];
+                
+                // Aplicar ordenamiento según configuración
+                sortContent();
                 renderContent();
             });
+        }
+
+        function sortContent() {
+            switch(appSettings.sortOrder) {
+                case 'newest':
+                    contentData.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                    break;
+                case 'oldest':
+                    contentData.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                    break;
+                case 'title':
+                    contentData.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+                    break;
+                case 'quality':
+                    const qualityOrder = { '4K': 4, 'HD': 3, 'SD': 2, '': 1 };
+                    contentData.sort((a, b) => (qualityOrder[b.quality] || 0) - (qualityOrder[a.quality] || 0));
+                    break;
+            }
         }
 
         let contentData = [];
@@ -839,7 +1129,6 @@
                 return matchOrigin && matchType && matchSearch;
             });
 
-            // Update stats
             document.getElementById('total-count').textContent = filtered.length;
             document.getElementById('images-count').textContent = filtered.filter(i => i.type === 'image').length;
             document.getElementById('videos-count').textContent = filtered.filter(i => i.type === 'video').length;
@@ -856,15 +1145,28 @@
                 return;
             }
 
-            grid.innerHTML = filtered.map(item => `
+            grid.innerHTML = filtered.map(item => {
+                // URL de alta calidad - sin compresión
+                let displayUrl = item.url;
+                // Si es imagen de Cloudinary, asegurar calidad máxima
+                if (item.type === 'image' && displayUrl.includes('cloudinary')) {
+                    // Reemplazar cualquier transformación con calidad máxima
+                    displayUrl = displayUrl.replace(/\/upload\/(q_auto[^/]*|w_[^/]*|c_[^/]*)\//g, '/upload/q_100/');
+                    // Si no tiene transformación, agregar calidad máxima
+                    if (!displayUrl.includes('/upload/q_')) {
+                        displayUrl = displayUrl.replace('/upload/', '/upload/q_100/');
+                    }
+                }
+
+                return `
                 <div class="content-item" onclick="openModal('${item.id}')">
                     ${isAdmin ? `<button class="delete-btn" onclick="deleteContent('${item.id}', event)" title="Eliminar">
                         <svg class="icon" style="width: 18px; height: 18px;"><use href="#icon-delete"/></svg>
                     </button>` : ''}
                     <span class="quality-badge">${item.quality || 'HD'}</span>
                     ${item.type === 'video' ? 
-                        `<video src="${item.url}" preload="metadata" muted style="width: 100%; height: 100%; object-fit: cover;"></video>` :
-                        `<img src="${item.thumbnailUrl || item.url}" alt="${item.title}" loading="lazy">`
+                        `<video src="${item.url}#t=0.1" preload="metadata" muted playsinline style="width: 100%; height: 100%; object-fit: cover; background: #000;"></video>` :
+                        `<img src="${displayUrl}" alt="${item.title}" loading="${appSettings.lazyLoad ? 'lazy' : 'eager'}" style="width: 100%; height: 100%; object-fit: cover;">`
                     }
                     <span class="content-type-badge ${item.type}">
                         ${getIcon(item.type)} ${item.type}
@@ -878,7 +1180,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function getIcon(type) {
@@ -893,28 +1195,35 @@
         function deleteContent(id, event) {
             event.stopPropagation();
             if (!isAdmin || !confirm('¿Eliminar permanentemente?')) return;
-            
-            database.ref('content/' + id).remove()
-                .catch((error) => alert('Error: ' + error.message));
+            database.ref('content/' + id).remove().catch((error) => alert('Error: ' + error.message));
         }
 
         function openModal(id) {
             const item = contentData.find(i => i.id === id);
             if (!item) return;
 
+            // URL de máxima calidad para el modal
+            let modalUrl = item.url;
+            if (item.type === 'image' && modalUrl.includes('cloudinary')) {
+                modalUrl = modalUrl.replace(/\/upload\/[^/]*\//g, '/upload/q_100/');
+                if (!modalUrl.includes('/upload/q_')) {
+                    modalUrl = modalUrl.replace('/upload/', '/upload/q_100/');
+                }
+            }
+
             const modal = document.getElementById('viewModal');
             const mediaContainer = document.getElementById('modalMedia');
             
             if (item.type === 'video') {
                 mediaContainer.innerHTML = `
-                    <video controls autoplay style="max-width: 90vw; max-height: 85vh; border-radius: 16px;">
+                    <video controls autoplay playsinline style="max-width: 95vw; max-height: 90vh; border-radius: 16px;">
                         <source src="${item.url}" type="video/${item.cloudinaryData?.format || 'mp4'}">
                         Tu navegador no soporta este video.
                     </video>
                 `;
             } else {
                 mediaContainer.innerHTML = `
-                    <img src="${item.url}" alt="${item.title}" style="max-width: 90vw; max-height: 85vh; border-radius: 16px;">
+                    <img src="${modalUrl}" alt="${item.title}" style="max-width: 95vw; max-height: 90vh; border-radius: 16px; object-fit: contain;">
                 `;
             }
             
